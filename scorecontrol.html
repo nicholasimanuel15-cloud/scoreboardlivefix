@@ -92,6 +92,14 @@
       let data = {};
       db.ref("scoreboard").on("value", snap => {
         if (snap.exists()) data = snap.val();
+
+          // warna text team
+          const aColor = data.textColorA || "#ffffff";
+          const bColor = data.textColorB || "#ffffff";
+
+          // kalau nanti dipakai di display scoreboard
+          window.teamAColor = aColor;
+          window.teamBColor = bColor;
       });
 
       function save(obj) {
