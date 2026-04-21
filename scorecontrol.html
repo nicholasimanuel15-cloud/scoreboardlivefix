@@ -154,7 +154,7 @@
         if (!data.gameStart) return;
 
         const now = Date.now() + serverOffset;
-        let elapsed = Math.floor((now - data.gameStart) / 1000);
+        let elapsed = Math.ceil((now - data.gameStart) / 1000);
         let remaining = Math.max(0, (data.gameDuration || 0) - elapsed);
 
         save({
