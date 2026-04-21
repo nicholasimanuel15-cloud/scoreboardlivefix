@@ -32,6 +32,7 @@
         font-weight: bold;
         letter-spacing: 2px;
         text-transform: uppercase;
+        border: 1px solid rgba(255,255,255,0.2);
       }
 
       .scoreboard {
@@ -97,7 +98,7 @@
         font-size: 30px;
         font-weight: bold;
         min-width: 55px;
-        display: none; /* 🔥 default hilang */
+        display: flex;
         align-items: center;
         justify-content: center;
       }
@@ -181,8 +182,6 @@
       });
 
       setInterval(() => {
-
-        // TIMER
         if (currentData.gameStart) {
           const now = Date.now();
           const elapsed = Math.floor((now - currentData.gameStart) / 1000);
@@ -192,24 +191,14 @@
           timer.innerText = formatTime(currentData.time || 0);
         }
 
-        // 🔥 SHOT CLOCK TOGGLE
-        if (currentData.shotOn) {
-
-          shotclock.style.display = "flex";
-
-          if (currentData.shotStart) {
-            const now = Date.now();
-            const elapsed = Math.floor((now - currentData.shotStart) / 1000);
-            const remaining = Math.max(0, (currentData.shotDuration || 24) - elapsed);
-            shotclock.innerText = remaining;
-          } else {
-            shotclock.innerText = currentData.shot || 24;
-          }
-
+        if (currentData.shotStart && currentData.shotOn) {
+          const now = Date.now();
+          const elapsed = Math.floor((now - currentData.shotStart) / 1000);
+          const remaining = Math.max(0, (currentData.shotDuration || 24) - elapsed);
+          shotclock.innerText = remaining;
         } else {
-          shotclock.style.display = "none";
+          shotclock.innerText = currentData.shot || 24;
         }
-
       }, 200);
     </script>
   </body>
