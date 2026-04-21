@@ -88,10 +88,9 @@
       }
 
       .teamTop {
-        display: flex;
+        display: grid;
+        grid-template-columns: 40px 1fr 40px; /* kiri logo - tengah teks - kanan kosong */
         align-items: center;
-        justify-content: center; /* 🔥 bikin ke tengah */
-        gap: 10px;
         width: 100%;
       }
 
@@ -100,6 +99,7 @@
         font-weight: bold;
         letter-spacing: 1px;
         text-align: center;
+        justify-self: center;
       }
 
       .foulTeam {
