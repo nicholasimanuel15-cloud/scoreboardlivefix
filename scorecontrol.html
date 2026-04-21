@@ -215,125 +215,127 @@
 
     <div class="container">
 
-      <!-- LEFT -->
-      <div>
+  <!-- LEFT -->
+  <div>
 
-        <div class="section">
-          <h3>JUDUL</h3>
-          <input placeholder="GROUP PHASE" oninput="setMatchTitle(this.value)" />
-        </div>
-
-        <div class="section">
-          <h3>TEAM</h3>
-          <div class="row">
-            <input placeholder="Team A" oninput="setName('A', this.value)" />
-            <input type="color" onchange="setTextColor('A', this.value)" />
-          </div>
-          <div class="row">
-            <input placeholder="Team B" oninput="setName('B', this.value)" />
-            <input type="color" onchange="setTextColor('B', this.value)" />
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>LOGO</h3>
-          <div class="row">
-            <input type="file" onchange="setLogo(event,'A')" />
-            <input type="file" onchange="setLogo(event,'B')" />
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>WARNA TEAM</h3>
-          <div class="row">
-            <input type="color" onchange="setColor('A', this.value)" />
-            <input type="color" onchange="setColor('B', this.value)" />
-          </div>
-        </div>
-
-      </div>
-
-      <!-- RIGHT -->
-      <div>
-
-        <div class="section">
-          <h3>SKOR</h3>
-
-          <div class="row">
-            Team A:
-            <button onclick="addScore('A',-1)">minus 1</button>
-            <button onclick="addScore('A',1)">+1</button>
-            <button onclick="addScore('A',2)">+2</button>
-            <button onclick="addScore('A',3)">+3</button>
-          </div>
-
-          <div class="row">
-            Team B:
-            <button onclick="addScore('B',-1)">minus 1</button>
-            <button onclick="addScore('B',1)">+1</button>
-            <button onclick="addScore('B',2)">+2</button>
-            <button onclick="addScore('B',3)">+3</button>
-          </div>
-
-          <div class="row">
-            <button class="big-btn" onclick="resetScore()">RESET SCORE</button>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>FOUL</h3>
-
-          <div class="row">
-            Team A:
-            <button onclick="addFoul('A')">+</button>
-            <button onclick="minusFoul('A')">-</button>
-
-            Team B:
-            <button onclick="addFoul('B')">+</button>
-            <button onclick="minusFoul('B')">-</button>
-          </div>
-
-          <div class="row">
-            <button class="big-btn" onclick="resetFoul()">RESET FOUL</button>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>TIMER</h3>
-          <div class="row">
-            <input id="min" placeholder="Min" />
-            <input id="sec" placeholder="Sec" />
-            <button onclick="setTime()">SET</button>
-          </div>
-
-          <div class="row">
-            <button onclick="startGame()">START</button>
-            <button onclick="pauseGame()">PAUSE</button>
-            <button onclick="resetTimer()">RESET</button>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>QUARTER</h3>
-          <div class="row">
-            <button onclick="nextQuarter()">NEXT</button>
-            <button onclick="resetQuarter()">RESET</button>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>SHOT CLOCK</h3>
-          <div class="row">
-            <button onclick="startShot()">START</button>
-            <button onclick="pauseShot()">PAUSE</button>
-            <button onclick="resetShot()">RESET</button>
-            <button onclick="toggleShot()">ON/OFF</button>
-          </div>
-        </div>
-
-      </div>
-
+    <div class="section">
+      <h3>JUDUL</h3>
+      <input placeholder="GROUP PHASE" oninput="setMatchTitle(this.value)" />
     </div>
+
+    <div class="section">
+      <h3>TEAM</h3>
+      <div class="row">
+        <input placeholder="Team A" oninput="setName('A', this.value)" />
+        <input type="color" onchange="setTextColor('A', this.value)" />
+      </div>
+      <div class="row">
+        <input placeholder="Team B" oninput="setName('B', this.value)" />
+        <input type="color" onchange="setTextColor('B', this.value)" />
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>LOGO</h3>
+      <div class="row">
+        <input type="file" onchange="setLogo(event,'A')" />
+        <input type="file" onchange="setLogo(event,'B')" />
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>WARNA TEAM</h3>
+      <div class="row">
+        <input type="color" onchange="setColor('A', this.value)" />
+        <input type="color" onchange="setColor('B', this.value)" />
+      </div>
+    </div>
+
+    <!-- 🔥 QUARTER DIPINDAH KE SINI -->
+    <div class="section">
+      <h3>QUARTER</h3>
+      <div class="row">
+        <button onclick="nextQuarter()">NEXT</button>
+        <button onclick="resetQuarter()">RESET</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT -->
+  <div>
+
+    <div class="section">
+      <h3>SKOR</h3>
+
+      <div class="row">
+        Team A:
+        <button onclick="addScore('A',-1)">minus 1</button>
+        <button onclick="addScore('A',1)">+1</button>
+        <button onclick="addScore('A',2)">+2</button>
+        <button onclick="addScore('A',3)">+3</button>
+      </div>
+
+      <div class="row">
+        Team B:
+        <button onclick="addScore('B',-1)">minus 1</button>
+        <button onclick="addScore('B',1)">+1</button>
+        <button onclick="addScore('B',2)">+2</button>
+        <button onclick="addScore('B',3)">+3</button>
+      </div>
+
+      <div class="row">
+        <button class="big-btn" onclick="resetScore()">RESET SCORE</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>FOUL</h3>
+
+      <div class="row">
+        Team A:
+        <button onclick="addFoul('A')">+</button>
+        <button onclick="minusFoul('A')">-</button>
+
+        Team B:
+        <button onclick="addFoul('B')">+</button>
+        <button onclick="minusFoul('B')">-</button>
+      </div>
+
+      <div class="row">
+        <button class="big-btn" onclick="resetFoul()">RESET FOUL</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>TIMER</h3>
+      <div class="row">
+        <input id="min" placeholder="Min" />
+        <input id="sec" placeholder="Sec" />
+        <button onclick="setTime()">SET</button>
+      </div>
+
+      <div class="row">
+        <button onclick="startGame()">START</button>
+        <button onclick="pauseGame()">PAUSE</button>
+        <button onclick="resetTimer()">RESET</button>
+      </div>
+    </div>
+
+    <!-- 🔥 SHOT CLOCK TETAP DI KANAN -->
+    <div class="section">
+      <h3>SHOT CLOCK</h3>
+      <div class="row">
+        <button onclick="startShot()">START</button>
+        <button onclick="pauseShot()">PAUSE</button>
+        <button onclick="resetShot()">RESET</button>
+        <button onclick="toggleShot()">ON/OFF</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
 
   </body>
 </html>
