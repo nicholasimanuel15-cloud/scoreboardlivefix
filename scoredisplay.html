@@ -40,7 +40,8 @@
         padding: 8px 14px;
         color: white;
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        justify-content: center;
         min-width: 170px;
       }
 
@@ -67,6 +68,25 @@
       .team span {
         font-size: 13px;
         letter-spacing: 1px;
+      }
+
+      /* 🔥 FOUL DI BAWAH TEAM */
+      .foulTeam {
+        margin-top: 4px;
+        font-size: 11px;
+        opacity: 0.8;
+      }
+
+      .teamA .foulTeam {
+        text-align: left;
+      }
+
+      .teamB .foulTeam {
+        text-align: right;
+      }
+
+      .foulTeam span {
+        font-weight: bold;
       }
 
       /* TEAM COLORS */
@@ -118,20 +138,6 @@
         letter-spacing: 1px;
       }
 
-      /* 🔥 FOUL TENGAH */
-      .foulCenter {
-        font-size: 12px;
-        margin-top: 4px;
-        letter-spacing: 1px;
-        opacity: 0.85;
-        border-top: 1px solid rgba(255,255,255,0.15);
-        padding-top: 3px;
-      }
-
-      .foulCenter span {
-        font-weight: bold;
-      }
-
       /* 🔥 SHOT CLOCK */
       .shotclock {
         background: #ff3b30;
@@ -155,6 +161,9 @@
           <img id="logoA" />
           <span id="teamAName">TEAM A</span>
         </div>
+        <div class="foulTeam">
+          FOUL <span id="foulA">0</span>
+        </div>
       </div>
 
       <div class="score" id="scoreA">0</div>
@@ -163,9 +172,6 @@
       <div class="center">
         <div id="timer">10:00</div>
         <div class="quarter" id="quarter">Q1</div>
-        <div class="foulCenter">
-          FOUL <span id="foulA">0</span> - <span id="foulB">0</span>
-        </div>
       </div>
 
       <div class="score" id="scoreB">0</div>
@@ -175,6 +181,9 @@
         <div class="teamTop">
           <span id="teamBName">TEAM B</span>
           <img id="logoB" />
+        </div>
+        <div class="foulTeam">
+          FOUL <span id="foulB">0</span>
         </div>
       </div>
 
