@@ -21,24 +21,25 @@
       }
 
       /* 🔥 JUDUL (FIX + Z-INDEX) */
-      .matchTitle {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+     .matchTitle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-        padding: 0 12px;       /* 🔥 lebih kecil */
-        min-width: 140px;      /* 🔥 dari 220 → 140 */
+      background: #111; /* 🔥 gelap seperti box score tengah */
+      color: white;
 
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
+      font-size: 16px;
+      font-weight: 900;
 
-        font-weight: bold;
-        font-size: 14px;       /* 🔥 perkecil teks */
-        letter-spacing: 0.5px; /* 🔥 lebih rapat */
+      padding: 0 16px;
+      min-width: 140px;
 
-        border-radius: 10px 0 0 10px;
-      }.
-
+      border-right: 2px solid rgba(255,255,255,0.1); /* 🔥 garis pemisah */
+  
+      /* 🔥 bentuk kotak kiri */
+      border-radius: 10px 0 0 10px;
+    }
       /* 🔥 MAIN CONTAINER */
       .scoreboard {
         position: absolute;
