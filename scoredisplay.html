@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <title>Scoreboard Display</title>
 
+    <!-- 🔥 FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
@@ -19,33 +20,24 @@
         --teamB: #1d428a;
       }
 
-      #matchTitle {
-        position: absolute;
-        bottom: 110px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.85);
-        color: #fff;
-        padding: 6px 20px;
-        border-radius: 8px;
-        font-size: 18px;
-        font-weight: bold;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        border: 1px solid rgba(255,255,255,0.2);
-      }
-
+      /* 🔥 MAIN CONTAINER */
       .scoreboard {
         position: absolute;
         bottom: 30px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
+        align-items: stretch;
+
         background: rgba(0, 0, 0, 0.9);
         border-radius: 10px;
         overflow: hidden;
+
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
+      /* 🔥 TEAM */
       .team {
         padding: 10px 16px;
         color: white;
@@ -59,45 +51,115 @@
         display: flex;
         align-items: center;
         gap: 10px;
+        width: 100%;
       }
 
+      .teamA .teamTop {
+        justify-content: flex-start;
+      }
+
+      .teamB .teamTop {
+        justify-content: flex-end;
+      }
+
+      /* 🔥 LOGO (DIPERBESAR) */
       .team img {
         width: 40px;
         height: 40px;
+        object-fit: contain;
       }
 
+      /* 🔥 NAMA TEAM (DIPERBESAR) */
       .team span {
         font-size: 18px;
         font-weight: bold;
+        letter-spacing: 1px;
       }
 
+      /* 🔥 FOUL */
+      .foulTeam {
+        margin-top: 4px;
+        font-size: 11px;
+        opacity: 0.8;
+      }
+
+      .teamA .foulTeam {
+        text-align: left;
+      }
+
+      .teamB .foulTeam {
+        text-align: right;
+      }
+
+      .foulTeam span {
+        font-weight: bold;
+      }
+
+      /* 🔥 TEAM COLORS */
+      .teamA {
+        background: linear-gradient(135deg, var(--teamA), #000);
+      }
+
+      .teamB {
+        background: linear-gradient(135deg, #000, var(--teamB));
+      }
+
+      /* 🔥 SCORE */
       .score {
         background: #111;
         color: white;
         font-size: 52px;
         font-weight: 900;
+        text-align: center;
+
         padding: 10px 20px;
+        min-width: 80px;
+
+        border-left: 2px solid rgba(255, 255, 255, 0.1);
+        border-right: 2px solid rgba(255, 255, 255, 0.1);
       }
 
+      /* 🔥 CENTER (TIMER + QUARTER) */
       .center {
         background: #000;
         color: #fff;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         text-align: center;
+
         padding: 6px 16px;
+
+        border-left: 2px solid rgba(255, 255, 255, 0.1);
+        border-right: 2px solid rgba(255, 255, 255, 0.1);
       }
 
       #timer {
         font-size: 30px;
         font-weight: 900;
         color: #00ffcc;
+        text-shadow: 0 0 10px rgba(0, 255, 200, 0.8);
       }
 
+      .quarter {
+        font-size: 11px;
+        margin-top: 2px;
+        opacity: 0.7;
+        letter-spacing: 1px;
+      }
+
+      /* 🔥 SHOT CLOCK */
       .shotclock {
         background: #ff3b30;
         color: white;
+
         font-size: 30px;
         font-weight: bold;
+
         min-width: 55px;
+        padding: 10px;
+
         display: flex;
         align-items: center;
         justify-content: center;
@@ -106,42 +168,51 @@
   </head>
 
   <body>
-
-    <div id="matchTitle">MATCH</div>
-
     <div class="scoreboard">
 
+      <!-- 🔴 TEAM A -->
       <div class="team teamA">
         <div class="teamTop">
           <img id="logoA" />
           <span id="teamAName">TEAM A</span>
         </div>
-        <div>FOUL <span id="foulA">0</span></div>
+
+        <div class="foulTeam">
+          FOUL <span id="foulA">0</span>
+        </div>
       </div>
 
+      <!-- 🔢 SCORE A -->
       <div class="score" id="scoreA">0</div>
 
+      <!-- ⏱ CENTER -->
       <div class="center">
         <div id="timer">10:00</div>
-        <div id="quarter">Q1</div>
+        <div class="quarter" id="quarter">Q1</div>
       </div>
 
+      <!-- 🔢 SCORE B -->
       <div class="score" id="scoreB">0</div>
 
+      <!-- 🔵 TEAM B -->
       <div class="team teamB">
         <div class="teamTop">
           <span id="teamBName">TEAM B</span>
           <img id="logoB" />
         </div>
-        <div>FOUL <span id="foulB">0</span></div>
+
+        <div class="foulTeam">
+          FOUL <span id="foulB">0</span>
+        </div>
       </div>
 
+      <!-- ⏱ SHOT CLOCK -->
       <div class="shotclock" id="shotclock">24</div>
     </div>
 
     <script>
       const firebaseConfig = {
-        apiKey: "AIzaSyCTYOFS3I-BpUZwEhHbuvR23AFO_xSvcHw",
+        apiKey: "AIzaSy...",
         authDomain: "scoreboard-basket-ea929.firebaseapp.com",
         databaseURL: "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
         projectId: "scoreboard-basket-ea929",
@@ -175,10 +246,17 @@
         teamAName.innerText = currentData.teamAName || "TEAM A";
         teamBName.innerText = currentData.teamBName || "TEAM B";
 
-        matchTitle.innerText = currentData.matchTitle || "MATCH";
-
         if (currentData.logoA) logoA.src = currentData.logoA;
         if (currentData.logoB) logoB.src = currentData.logoB;
+
+        if (currentData.colorA)
+          document.documentElement.style.setProperty("--teamA", currentData.colorA);
+
+        if (currentData.colorB)
+          document.documentElement.style.setProperty("--teamB", currentData.colorB);
+
+        teamAName.style.color = currentData.textColorA || "#ffffff";
+        teamBName.style.color = currentData.textColorB || "#ffffff";
       });
 
       setInterval(() => {
@@ -195,9 +273,12 @@
           const now = Date.now();
           const elapsed = Math.floor((now - currentData.shotStart) / 1000);
           const remaining = Math.max(0, (currentData.shotDuration || 24) - elapsed);
+
           shotclock.innerText = remaining;
+          shotclock.style.display = "flex";
         } else {
           shotclock.innerText = currentData.shot || 24;
+          shotclock.style.display = currentData.shotOn ? "flex" : "none";
         }
       }, 200);
     </script>
