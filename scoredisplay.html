@@ -20,45 +20,38 @@
         --teamB: #1d428a;
       }
 
-      /* 🔥 MAIN */
+      /* 🔥 MAIN CONTAINER */
       .scoreboard {
         position: absolute;
-        bottom: 40px;
+        bottom: 30px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
-        align-items: center;
+        align-items: stretch;
 
-        background: rgba(10, 10, 10, 0.95);
-        border-radius: 14px;
-        overflow: visible;
+        background: rgba(0, 0, 0, 0.9);
+        border-radius: 10px;
+        overflow: hidden;
 
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
-        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       /* 🔥 TEAM */
       .team {
-        width: 200px;
-        padding: 10px 14px;
+        padding: 8px 14px;
         color: white;
         display: flex;
         flex-direction: column;
         justify-content: center;
-      }
-
-      .teamA {
-        background: linear-gradient(135deg, var(--teamA), #000);
-      }
-
-      .teamB {
-        background: linear-gradient(135deg, #000, var(--teamB));
+        min-width: 170px;
       }
 
       .teamTop {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
+        width: 100%;
       }
 
       .teamA .teamTop {
@@ -70,22 +63,20 @@
       }
 
       .team img {
-        width: 26px;
-        height: 26px;
+        width: 24px;
+        height: 24px;
       }
 
-      .teamName {
-        font-size: 14px;
+      .team span {
+        font-size: 13px;
         letter-spacing: 1px;
       }
 
       /* 🔥 FOUL */
       .foulTeam {
-        margin-top: 6px;
+        margin-top: 4px;
         font-size: 11px;
         opacity: 0.8;
-        border-top: 1px solid rgba(255,255,255,0.2);
-        padding-top: 3px;
       }
 
       .teamA .foulTeam {
@@ -96,70 +87,78 @@
         text-align: right;
       }
 
+      .foulTeam span {
+        font-weight: bold;
+      }
+
+      /* 🔥 TEAM COLORS */
+      .teamA {
+        background: linear-gradient(135deg, var(--teamA), #000);
+      }
+
+      .teamB {
+        background: linear-gradient(135deg, #000, var(--teamB));
+      }
+
       /* 🔥 SCORE */
-      .scoreBox {
-        display: flex;
-        align-items: center;
-        background: #000;
-      }
-
       .score {
-        font-size: 64px;
-        font-weight: 900;
-        padding: 0 20px;
+        background: #111;
         color: white;
-        min-width: 90px;
+        font-size: 52px;
+        font-weight: 900;
         text-align: center;
+
+        padding: 10px 20px;
+        min-width: 80px;
+
+        border-left: 2px solid rgba(255, 255, 255, 0.1);
+        border-right: 2px solid rgba(255, 255, 255, 0.1);
       }
 
-      .vs {
-        font-size: 14px;
-        opacity: 0.5;
-        letter-spacing: 2px;
-      }
-
-      /* 🔥 CENTER */
+      /* 🔥 CENTER (TIMER + QUARTER) */
       .center {
-        background: #050505;
-        padding: 6px 20px;
+        background: #000;
+        color: #fff;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         text-align: center;
-        border-left: 2px solid rgba(255,255,255,0.08);
-        border-right: 2px solid rgba(255,255,255,0.08);
+
+        padding: 6px 16px;
+
+        border-left: 2px solid rgba(255, 255, 255, 0.1);
+        border-right: 2px solid rgba(255, 255, 255, 0.1);
       }
 
       #timer {
-        font-size: 34px;
+        font-size: 30px;
         font-weight: 900;
         color: #00ffcc;
-        text-shadow: 0 0 12px rgba(0,255,200,0.8);
+        text-shadow: 0 0 10px rgba(0, 255, 200, 0.8);
       }
 
       .quarter {
-        font-size: 12px;
-        opacity: 0.6;
-        letter-spacing: 2px;
+        font-size: 11px;
+        margin-top: 2px;
+        opacity: 0.7;
+        letter-spacing: 1px;
       }
 
-      /* 🔥 SHOT CLOCK FLOAT */
+      /* 🔥 SHOT CLOCK */
       .shotclock {
-        position: absolute;
-        right: -65px;
-        bottom: 0;
-
         background: #ff3b30;
         color: white;
-        font-size: 28px;
+
+        font-size: 30px;
         font-weight: bold;
 
-        width: 60px;
-        height: 60px;
+        min-width: 55px;
+        padding: 10px;
 
         display: flex;
         align-items: center;
         justify-content: center;
-
-        border-radius: 12px;
-        box-shadow: 0 0 20px rgba(255, 60, 60, 0.8);
       }
     </style>
   </head>
@@ -167,42 +166,43 @@
   <body>
     <div class="scoreboard">
 
-      <!-- TEAM A -->
+      <!-- 🔴 TEAM A -->
       <div class="team teamA">
         <div class="teamTop">
           <img id="logoA" />
-          <span class="teamName" id="teamAName">TEAM A</span>
+          <span id="teamAName">TEAM A</span>
         </div>
+
         <div class="foulTeam">
           FOUL <span id="foulA">0</span>
         </div>
       </div>
 
-      <!-- SCORE -->
-      <div class="scoreBox">
-        <div class="score" id="scoreA">0</div>
-        <div class="vs">VS</div>
-        <div class="score" id="scoreB">0</div>
-      </div>
+      <!-- 🔢 SCORE A -->
+      <div class="score" id="scoreA">0</div>
 
-      <!-- CENTER -->
+      <!-- ⏱ CENTER -->
       <div class="center">
         <div id="timer">10:00</div>
         <div class="quarter" id="quarter">Q1</div>
       </div>
 
-      <!-- TEAM B -->
+      <!-- 🔢 SCORE B -->
+      <div class="score" id="scoreB">0</div>
+
+      <!-- 🔵 TEAM B -->
       <div class="team teamB">
         <div class="teamTop">
-          <span class="teamName" id="teamBName">TEAM B</span>
+          <span id="teamBName">TEAM B</span>
           <img id="logoB" />
         </div>
+
         <div class="foulTeam">
           FOUL <span id="foulB">0</span>
         </div>
       </div>
 
-      <!-- SHOT CLOCK -->
+      <!-- ⏱ SHOT CLOCK -->
       <div class="shotclock" id="shotclock">24</div>
     </div>
 
