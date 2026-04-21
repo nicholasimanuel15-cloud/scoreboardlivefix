@@ -19,26 +19,20 @@
         --teamB: #1d428a;
       }
 
-      /* 🔥 MATCH TITLE */
       #matchTitle {
         position: absolute;
         bottom: 110px;
         left: 50%;
         transform: translateX(-50%);
-
         background: rgba(0,0,0,0.85);
         color: #fff;
-
         padding: 6px 20px;
         border-radius: 8px;
-
         font-size: 18px;
         font-weight: bold;
         letter-spacing: 2px;
         text-transform: uppercase;
-
         border: 1px solid rgba(255,255,255,0.2);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
       }
 
       .scoreboard {
@@ -47,14 +41,9 @@
         left: 50%;
         transform: translateX(-50%);
         display: flex;
-        align-items: stretch;
-
         background: rgba(0, 0, 0, 0.9);
         border-radius: 10px;
         overflow: hidden;
-
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
       .team {
@@ -70,21 +59,11 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        width: 100%;
-      }
-
-      .teamA .teamTop {
-        justify-content: flex-start;
-      }
-
-      .teamB .teamTop {
-        justify-content: flex-end;
       }
 
       .team img {
         width: 40px;
         height: 40px;
-        object-fit: contain;
       }
 
       .team span {
@@ -92,40 +71,19 @@
         font-weight: bold;
       }
 
-      .foulTeam {
-        margin-top: 4px;
-        font-size: 11px;
-        opacity: 0.8;
-      }
-
-      .teamA .foulTeam { text-align: left; }
-      .teamB .foulTeam { text-align: right; }
-
-      .teamA { background: linear-gradient(135deg, var(--teamA), #000); }
-      .teamB { background: linear-gradient(135deg, #000, var(--teamB)); }
-
       .score {
         background: #111;
         color: white;
         font-size: 52px;
         font-weight: 900;
-        text-align: center;
         padding: 10px 20px;
-        min-width: 80px;
-        border-left: 2px solid rgba(255, 255, 255, 0.1);
-        border-right: 2px solid rgba(255, 255, 255, 0.1);
       }
 
       .center {
         background: #000;
         color: #fff;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
         text-align: center;
         padding: 6px 16px;
-        border-left: 2px solid rgba(255, 255, 255, 0.1);
-        border-right: 2px solid rgba(255, 255, 255, 0.1);
       }
 
       #timer {
@@ -134,18 +92,12 @@
         color: #00ffcc;
       }
 
-      .quarter {
-        font-size: 11px;
-        opacity: 0.7;
-      }
-
       .shotclock {
         background: #ff3b30;
         color: white;
         font-size: 30px;
         font-weight: bold;
         min-width: 55px;
-        padding: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -155,7 +107,6 @@
 
   <body>
 
-    <!-- 🔥 TITLE -->
     <div id="matchTitle">MATCH</div>
 
     <div class="scoreboard">
@@ -165,14 +116,14 @@
           <img id="logoA" />
           <span id="teamAName">TEAM A</span>
         </div>
-        <div class="foulTeam">FOUL <span id="foulA">0</span></div>
+        <div>FOUL <span id="foulA">0</span></div>
       </div>
 
       <div class="score" id="scoreA">0</div>
 
       <div class="center">
         <div id="timer">10:00</div>
-        <div class="quarter" id="quarter">Q1</div>
+        <div id="quarter">Q1</div>
       </div>
 
       <div class="score" id="scoreB">0</div>
@@ -182,14 +133,22 @@
           <span id="teamBName">TEAM B</span>
           <img id="logoB" />
         </div>
-        <div class="foulTeam">FOUL <span id="foulB">0</span></div>
+        <div>FOUL <span id="foulB">0</span></div>
       </div>
 
       <div class="shotclock" id="shotclock">24</div>
     </div>
 
     <script>
-      const firebaseConfig = { /* PUNYA KAMU */ };
+      const firebaseConfig = {
+        apiKey: "AIzaSyCTYOFS3I-BpUZwEhHbuvR23AFO_xSvcHw",
+        authDomain: "scoreboard-basket-ea929.firebaseapp.com",
+        databaseURL: "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "scoreboard-basket-ea929",
+        storageBucket: "scoreboard-basket-ea929.firebasestorage.app",
+        messagingSenderId: "248063752824",
+        appId: "1:248063752824:web:10eccbc425598daa748b8d",
+      };
 
       firebase.initializeApp(firebaseConfig);
       const db = firebase.database();
