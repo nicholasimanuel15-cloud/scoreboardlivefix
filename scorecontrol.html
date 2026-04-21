@@ -1,4 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scoreboard Control</title>
 
+    <!-- 🔥 FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+    <style>
+      body {
+        background: black;
+        color: white;
+        font-family: Arial;
+        padding: 20px;
+      }
+
+      .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+
+      .section {
+        margin-bottom: 20px;
+      }
 
       .row {
         display: flex;
@@ -21,23 +47,26 @@
   <body>
     <script>
       const firebaseConfig = {
-        apiKey: "AIzaSyCTYOFS3I-BpUZwEhHbuvR23AFO_xSvcHw",
-        authDomain: "scoreboard-basket-ea929.firebaseapp.com",
-        databaseURL: "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "scoreboard-basket-ea929",
-        storageBucket: "scoreboard-basket-ea929.firebasestorage.app",
-        messagingSenderId: "248063752824",
-        appId: "1:248063752824:web:10eccbc425598daa748b8d",
-        measurementId: "G-8M1EGBQLNN"
+        apiKey: "AIzaSyAjfc1j_OqFf3GQBEJdvOxugZvEFYeilig",
+        authDomain: "scoreboardlive-df382.firebaseapp.com",
+        databaseURL:
+          "https://scoreboardlive-df382-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "scoreboardlive-df382",
+        storageBucket: "scoreboardlive-df382.firebasestorage.app",
+        messagingSenderId: "158633426706",
+        appId: "1:158633426706:web:5db59534735d2e734dfdcb",
       };
 
       firebase.initializeApp(firebaseConfig);
       const db = firebase.database();
 
       let serverOffset = 0;
-      firebase.database().ref(".info/serverTimeOffset").on("value", (snap) => {
-      serverOffset = snap.val() || 0;
-      });
+      firebase
+        .database()
+        .ref(".info/serverTimeOffset")
+        .on("value", (snap) => {
+          serverOffset = snap.val() || 0;
+        });
 
       let data = {
         scoreA: 0,
@@ -59,7 +88,7 @@
       function save(obj) {
         db.ref("scoreboard").update(obj);
       }
-     
+
       /* TEAM */
       function setName(t, v) {
         save({ ["team" + t + "Name"]: v });
@@ -125,34 +154,40 @@
       }
 
       function startGame() {
-        firebase.database().ref(".info/serverTimeOffset").once("value", (snap) => {
-        const offset = snap.val() || 0;
+        firebase
+          .database()
+          .ref(".info/serverTimeOffset")
+          .once("value", (snap) => {
+            const offset = snap.val() || 0;
 
-        const now = Date.now() + offset; // ini waktu server versi device
+            const now = Date.now() + offset; // ini waktu server versi device
 
-          save({
-            gameStart: now,
-            gameDuration: data.time || 0,
-        });
-        });
+            save({
+              gameStart: now,
+              gameDuration: data.time || 0,
+            });
+          });
       }
 
       function pauseGame() {
         if (!data.gameStart) return;
 
-          firebase.database().ref(".info/serverTimeOffset").once("value", (snap) => {
-          const offset = snap.val() || 0;
-          const now = Date.now() + offset;
+        firebase
+          .database()
+          .ref(".info/serverTimeOffset")
+          .once("value", (snap) => {
+            const offset = snap.val() || 0;
+            const now = Date.now() + offset;
 
-          let elapsed = Math.floor((now - data.gameStart) / 1000);
-          let remaining = Math.max(0, (data.gameDuration || 0) - elapsed);
+            let elapsed = Math.floor((now - data.gameStart) / 1000);
+            let remaining = Math.max(0, (data.gameDuration || 0) - elapsed);
 
-      save({
-      time: remaining,
-      gameStart: null,
-    });
-  });
-}
+            save({
+              time: remaining,
+              gameStart: null,
+            });
+          });
+      }
 
       function resetTimer() {
         save({
@@ -184,34 +219,40 @@
       function startShot() {
         if (!data.shotOn) return;
 
-          firebase.database().ref(".info/serverTimeOffset").once("value", (snap) => {
-          const offset = snap.val() || 0;
-          const now = Date.now() + offset;
+        firebase
+          .database()
+          .ref(".info/serverTimeOffset")
+          .once("value", (snap) => {
+            const offset = snap.val() || 0;
+            const now = Date.now() + offset;
 
-        save({
-            shotStart: now,
-            shotDuration: 24, // langsung pakai 24 biar konsisten
-        });
-        });
+            save({
+              shotStart: now,
+              shotDuration: 24, // langsung pakai 24 biar konsisten
+            });
+          });
       }
 
-     function pauseShot() {
-      if (!data.shotStart) return;
+      function pauseShot() {
+        if (!data.shotStart) return;
 
-        firebase.database().ref(".info/serverTimeOffset").once("value", (snap) => {
-        const offset = snap.val() || 0;
-        const now = Date.now() + offset;
+        firebase
+          .database()
+          .ref(".info/serverTimeOffset")
+          .once("value", (snap) => {
+            const offset = snap.val() || 0;
+            const now = Date.now() + offset;
 
-        let elapsed = Math.floor((now - data.shotStart) / 1000);
-        let duration = data.shotDuration || 24;
+            let elapsed = Math.floor((now - data.shotStart) / 1000);
+            let duration = data.shotDuration || 24;
 
-        let remaining = duration - (elapsed % duration);
+            let remaining = duration - (elapsed % duration);
 
-        save({
-            shot: remaining,
-            shotStart: null,
-       });
-       });
+            save({
+              shot: remaining,
+              shotStart: null,
+            });
+          });
       }
 
       function resetShot() {
@@ -224,16 +265,19 @@
       function toggleShot() {
         let newState = !data.shotOn;
 
-        firebase.database().ref(".info/serverTimeOffset").once("value", (snap) => {
-        const offset = snap.val() || 0;
-        const now = Date.now() + offset;
+        firebase
+          .database()
+          .ref(".info/serverTimeOffset")
+          .once("value", (snap) => {
+            const offset = snap.val() || 0;
+            const now = Date.now() + offset;
 
-        save({
-          shotOn: newState,
-          shotStart: newState ? now : null,
-          shotDuration: 24,
-        });
-        });
+            save({
+              shotOn: newState,
+              shotStart: newState ? now : null,
+              shotDuration: 24,
+            });
+          });
       }
     </script>
 
