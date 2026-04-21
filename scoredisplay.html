@@ -22,26 +22,20 @@
 
       /* 🔥 JUDUL (FIX + Z-INDEX) */
       .matchTitle {
-        position: absolute;
-        bottom: 30px; /* 🔥 sejajar scoreboard */
-        left: calc(50% - 420px); /* 🔥 posisi kiri scoreboard (sesuaikan lebar) */
-
-        height: 100%; /* 🔥 samain tinggi dengan scoreboard */
         display: flex;
-        align-items: center; /* 🔥 vertical center */
+        align-items: center;
         justify-content: center;
 
-        background: rgba(0, 0, 0, 0.85);
-        color: white;
         padding: 0 20px;
+        min-width: 220px;
+
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
 
         font-weight: bold;
         letter-spacing: 1px;
 
-        border-radius: 10px 0 0 10px;
-
-        z-index: 9999;
-        min-width: 200px;
+        border-radius: 10px 0 0 10px; /* 🔥 kiri rounded */
       }
 
       /* 🔥 MAIN CONTAINER */
@@ -185,10 +179,13 @@
 
   <body>
 
-    <!-- 🔥 JUDUL -->
-    <div id="matchTitle" class="matchTitle">MATCH TITLE</div>
-
     <div class="scoreboard">
+
+        <!-- 🔥 MATCH TITLE (PINDAH KE SINI) -->
+        <div id="matchTitle" class="matchTitle">MATCH TITLE</div>
+
+        <!-- 🔴 TEAM A -->
+        <div class="team teamA">
 
       <!-- 🔴 TEAM A -->
       <div class="team teamA">
