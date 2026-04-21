@@ -2,22 +2,16 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Scoreboard Display</title>
+    <title>NBA Style Scoreboard</title>
 
-    <!-- 🔥 FIREBASE -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 
     <style>
       body {
         margin: 0;
+        font-family: 'Segoe UI', Arial;
         background: transparent;
-        font-family: Arial;
-      }
-
-      :root {
-        --teamA: red;
-        --teamB: blue;
       }
 
       .scoreboard {
@@ -27,115 +21,122 @@
         transform: translateX(-50%);
         display: flex;
         align-items: center;
+        background: rgba(0,0,0,0.85);
+        border-radius: 14px;
+        padding: 10px 16px;
+        gap: 14px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.5);
       }
 
       .team {
-        padding: 10px 20px;
-        color: white;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .teamTop {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
+        min-width: 160px;
       }
 
       .team img {
-        width: 35px;
-        height: 35px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
       }
 
-      .team span {
+      .team-info {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .team-name {
+        color: white;
         font-weight: bold;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-      }
-
-      .divider {
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(to right, transparent, white, transparent);
-        margin: 6px 0;
+        font-size: 16px;
       }
 
       .foul {
-        font-size: 14px;
-        margin-top: 4px;
-      }
-
-      .teamA {
-        background: var(--teamA);
-      }
-      .teamB {
-        background: var(--teamB);
+        color: #bbb;
+        font-size: 12px;
       }
 
       .score {
-        background: black;
+        font-size: 48px;
+        font-weight: bold;
         color: white;
-        font-size: 40px;
-        padding: 10px 20px;
-        margin: 0 10px;
-        border-radius: 8px;
-      }
-
-      .center {
-        background: black;
-        color: yellow;
-        font-size: 28px;
-        padding: 10px 20px;
-        border-radius: 10px;
+        width: 70px;
         text-align: center;
       }
 
+      .center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 12px;
+      }
+
+      .timer {
+        font-size: 32px;
+        font-weight: bold;
+        color: #00ffcc;
+      }
+
       .quarter {
-        color: white;
         font-size: 14px;
+        color: #aaa;
       }
 
       .shotclock {
-        background: orange;
-        color: black;
-        font-size: 28px;
-        padding: 10px;
-        margin-left: 10px;
+        background: #ff3b30;
+        color: white;
+        font-weight: bold;
+        font-size: 24px;
+        padding: 8px 12px;
         border-radius: 8px;
+        min-width: 50px;
+        text-align: center;
+      }
+
+      .divider {
+        width: 1px;
+        height: 50px;
+        background: rgba(255,255,255,0.2);
       }
     </style>
   </head>
 
   <body>
     <div class="scoreboard">
-      <div class="team teamA">
-        <div class="teamTop">
-          <img id="logoA" />
-          <span id="teamAName">TEAM A</span>
+
+      <div class="team">
+        <img id="logoA" />
+        <div class="team-info">
+          <div class="team-name" id="teamAName">TEAM A</div>
+          <div class="foul">FOUL: <span id="foulA">0</span></div>
         </div>
-        <div class="divider"></div>
-        <div class="foul">FOUL: <span id="foulA">0</span></div>
       </div>
 
       <div class="score" id="scoreA">0</div>
 
+      <div class="divider"></div>
+
       <div class="center">
-        <div id="timer">10:00</div>
+        <div class="timer" id="timer">10:00</div>
         <div class="quarter" id="quarter">Q1</div>
       </div>
 
+      <div class="divider"></div>
+
       <div class="score" id="scoreB">0</div>
 
-      <div class="team teamB">
-        <div class="teamTop">
-          <span id="teamBName">TEAM B</span>
-          <img id="logoB" />
+      <div class="team">
+        <div class="team-info" style="text-align:right">
+          <div class="team-name" id="teamBName">TEAM B</div>
+          <div class="foul">FOUL: <span id="foulB">0</span></div>
         </div>
-        <div class="divider"></div>
-        <div class="foul">FOUL: <span id="foulB">0</span></div>
+        <img id="logoB" />
       </div>
 
       <div class="shotclock" id="shotclock">24</div>
+
     </div>
 
     <script>
@@ -145,10 +146,6 @@
         databaseURL:
           "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
         projectId: "scoreboard-basket-ea929",
-        storageBucket: "scoreboard-basket-ea929.firebasestorage.app",
-        messagingSenderId: "248063752824",
-        appId: "1:248063752824:web:10eccbc425598daa748b8d",
-        measurementId: "G-8M1EGBQLNN",
       };
 
       firebase.initializeApp(firebaseConfig);
@@ -162,7 +159,6 @@
         return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
       }
 
-      // 🔥 LISTENER (HANYA TERIMA DATA)
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
 
@@ -179,26 +175,9 @@
 
         if (currentData.logoA) logoA.src = currentData.logoA;
         if (currentData.logoB) logoB.src = currentData.logoB;
-
-        if (currentData.colorA)
-          document.documentElement.style.setProperty(
-            "--teamA",
-            currentData.colorA,
-          );
-
-        if (currentData.colorB)
-          document.documentElement.style.setProperty(
-            "--teamB",
-            currentData.colorB,
-          );
-
-        teamAName.style.color = currentData.textColorA || "#ffffff";
-        teamBName.style.color = currentData.textColorB || "#ffffff";
       });
 
-      // 🔥 TIMER LOOP (LOKAL → SMOOTH)
       setInterval(() => {
-        // GAME TIMER
         if (currentData.gameStart) {
           const now = Date.now();
           const elapsed = Math.floor((now - currentData.gameStart) / 1000);
@@ -212,7 +191,6 @@
           timer.innerText = formatTime(currentData.time || 0);
         }
 
-        // SHOT CLOCK
         if (currentData.shotStart && currentData.shotOn) {
           const now = Date.now();
           const elapsed = Math.floor((now - currentData.shotStart) / 1000);
@@ -227,7 +205,7 @@
           shotclock.innerText = currentData.shot || 24;
           shotclock.style.display = currentData.shotOn ? "block" : "none";
         }
-      }, 200); // 🔥 update tiap 0.2 detik (super smooth)
+      }, 200);
     </script>
   </body>
 </html>
