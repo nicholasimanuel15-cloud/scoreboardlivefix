@@ -250,17 +250,17 @@
       }
 
       function toggleShot() {
-        let newState = !data.shotOn;
+          let newState = !data.shotOn;
 
         firebase.database().ref(".info/serverTimeOffset").once("value", (snap) => {
-          const offset = snap.val() || 0;
-          const now = Date.now() + offset;
+        const offset = snap.val() || 0;
+        const now = Date.now() + offset;
 
           save({
             shotOn: newState,
             shotStart: newState ? now : null,
             shotDuration: 24,
-          });
+        });
         });
       }
     </script>
