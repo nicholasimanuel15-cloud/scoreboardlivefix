@@ -20,7 +20,6 @@
         --teamB: #1d428a;
       }
 
-      /* 🔥 MAIN CONTAINER */
       .scoreboard {
         position: absolute;
         bottom: 30px;
@@ -37,7 +36,7 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
-      /* 🔥 MATCH TITLE (BARU) */
+      /* 🔥 MATCH TITLE */
       .matchTitle {
         background: #000;
         color: #fff;
@@ -46,17 +45,18 @@
         align-items: center;
         justify-content: center;
 
-        padding: 10px 20px;
-        font-size: 14px;
+        padding: 10px 16px;
+        font-size: 13px;
         font-weight: bold;
         letter-spacing: 1px;
 
         border-right: 2px solid rgba(255,255,255,0.1);
 
-        white-space: nowrap;
+        text-align: center;
+        line-height: 1.1;
+        min-width: 110px;
       }
 
-      /* 🔥 TEAM */
       .team {
         padding: 10px 16px;
         color: white;
@@ -107,10 +107,6 @@
         text-align: right;
       }
 
-      .foulTeam span {
-        font-weight: bold;
-      }
-
       .teamA {
         background: linear-gradient(135deg, var(--teamA), #000);
       }
@@ -119,7 +115,6 @@
         background: linear-gradient(135deg, #000, var(--teamB));
       }
 
-      /* 🔥 SCORE */
       .score {
         background: #111;
         color: white;
@@ -134,7 +129,6 @@
         border-right: 2px solid rgba(255, 255, 255, 0.1);
       }
 
-      /* 🔥 CENTER */
       .center {
         background: #000;
         color: #fff;
@@ -164,7 +158,6 @@
         letter-spacing: 1px;
       }
 
-      /* 🔥 SHOT CLOCK */
       .shotclock {
         background: #ff3b30;
         color: white;
@@ -186,7 +179,9 @@
     <div class="scoreboard">
 
       <!-- 🔥 MATCH TITLE -->
-      <div class="matchTitle" id="matchTitle">MATCH<br>TITLE</div>
+      <div class="matchTitle" id="matchTitle">
+        GROUP<br>PHASE
+      </div>
 
       <!-- 🔴 TEAM A -->
       <div class="team teamA">
@@ -194,7 +189,6 @@
           <img id="logoA" />
           <span id="teamAName">TEAM A</span>
         </div>
-
         <div class="foulTeam">
           FOUL <span id="foulA">0</span>
         </div>
@@ -218,7 +212,6 @@
           <span id="teamBName">TEAM B</span>
           <img id="logoB" />
         </div>
-
         <div class="foulTeam">
           FOUL <span id="foulB">0</span>
         </div>
@@ -253,7 +246,9 @@
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
 
-        matchTitle.innerText = currentData.matchTitle || "MATCH TITLE";
+        // 🔥 AUTO 2 BARIS
+        let title = currentData.matchTitle || "GROUP PHASE";
+        matchTitle.innerHTML = title.replace(" ", "<br>");
 
         scoreA.innerText = currentData.scoreA || 0;
         scoreB.innerText = currentData.scoreB || 0;
