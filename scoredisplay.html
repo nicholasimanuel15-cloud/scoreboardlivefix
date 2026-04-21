@@ -22,17 +22,22 @@
 
       /* 🔥 JUDUL (FIX + Z-INDEX) */
       .matchTitle {
-        position: absolute;
-        bottom: 30px;
-        left: calc(50% - 420px);
-        background: rgba(0, 0, 0, 0.85);
-        color: white;
-        padding: 8px 16px;
-        font-weight: bold;
-        border-radius: 10px 0 0 10px;
-        letter-spacing: 1px;
-        z-index: 9999; /* 🔥 BIAR TIDAK KETUTUP */
-      }
+  position: absolute;
+  bottom: 85px; /* 🔥 naik ke atas scoreboard */
+  left: 50%;
+  transform: translateX(-50%); /* 🔥 biar center */
+
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 8px 20px;
+  font-weight: bold;
+  border-radius: 10px;
+  letter-spacing: 1px;
+
+  z-index: 9999;
+  text-align: center;
+  min-width: 200px;
+}
 
       /* 🔥 MAIN CONTAINER */
       .scoreboard {
