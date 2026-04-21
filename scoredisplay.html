@@ -12,29 +12,37 @@
       body {
         margin: 0;
         background: transparent;
-        font-family: Arial;
+        font-family: "Arial Black", Arial, sans-serif;
       }
 
       :root {
-        --teamA: red;
-        --teamB: blue;
+        --teamA: #c8102e;
+        --teamB: #1d428a;
       }
 
+      /* 🔥 MAIN SCOREBOARD */
       .scoreboard {
         position: absolute;
-        top: 20px;
+        bottom: 30px;
         left: 50%;
         transform: translateX(-50%);
         display: flex;
         align-items: center;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(10px);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
       }
 
+      /* 🔥 TEAM BLOCK */
       .team {
-        padding: 10px 20px;
+        padding: 10px 18px;
         color: white;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        justify-content: center;
+        min-width: 140px;
       }
 
       .teamTop {
@@ -44,81 +52,91 @@
       }
 
       .team img {
-        width: 35px;
-        height: 35px;
+        width: 28px;
+        height: 28px;
       }
 
       .team span {
-        font-weight: bold;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-      }
-
-      .divider {
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(to right, transparent, white, transparent);
-        margin: 6px 0;
+        font-size: 14px;
+        letter-spacing: 1px;
       }
 
       .foul {
-        font-size: 14px;
-        margin-top: 4px;
+        font-size: 12px;
+        opacity: 0.8;
       }
 
       .teamA {
-        background: var(--teamA);
+        background: linear-gradient(135deg, var(--teamA), #000);
       }
+
       .teamB {
-        background: var(--teamB);
+        background: linear-gradient(135deg, #000, var(--teamB));
       }
 
+      /* 🔥 SCORE */
       .score {
-        background: black;
+        background: #111;
         color: white;
-        font-size: 40px;
-        padding: 10px 20px;
-        margin: 0 10px;
-        border-radius: 8px;
+        font-size: 46px;
+        padding: 10px 18px;
+        font-weight: bold;
+        text-align: center;
+        min-width: 70px;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
       }
 
+      /* 🔥 CENTER TIMER */
       .center {
-        background: black;
-        color: yellow;
-        font-size: 28px;
-        padding: 10px 20px;
-        border-radius: 10px;
+        background: #000;
+        color: #fff;
         text-align: center;
+        padding: 8px 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      #timer {
+        font-size: 28px;
+        font-weight: bold;
+        color: #00ffcc;
+        text-shadow: 0 0 10px rgba(0, 255, 200, 0.7);
       }
 
       .quarter {
-        color: white;
-        font-size: 14px;
+        font-size: 12px;
+        opacity: 0.7;
       }
 
+      /* 🔥 SHOT CLOCK */
       .shotclock {
-        background: orange;
-        color: black;
+        background: #ff3b30;
+        color: white;
         font-size: 28px;
-        padding: 10px;
-        margin-left: 10px;
-        border-radius: 8px;
+        padding: 12px;
+        font-weight: bold;
+        min-width: 50px;
+        text-align: center;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
       }
     </style>
   </head>
 
   <body>
     <div class="scoreboard">
+      <!-- TEAM A -->
       <div class="team teamA">
         <div class="teamTop">
           <img id="logoA" />
           <span id="teamAName">TEAM A</span>
         </div>
-        <div class="divider"></div>
         <div class="foul">FOUL: <span id="foulA">0</span></div>
       </div>
 
       <div class="score" id="scoreA">0</div>
 
+      <!-- CENTER -->
       <div class="center">
         <div id="timer">10:00</div>
         <div class="quarter" id="quarter">Q1</div>
@@ -126,12 +144,12 @@
 
       <div class="score" id="scoreB">0</div>
 
+      <!-- TEAM B -->
       <div class="team teamB">
         <div class="teamTop">
           <span id="teamBName">TEAM B</span>
           <img id="logoB" />
         </div>
-        <div class="divider"></div>
         <div class="foul">FOUL: <span id="foulB">0</span></div>
       </div>
 
@@ -142,12 +160,12 @@
       const firebaseConfig = {
         apiKey: "AIzaSyCTYOFS3I-BpUZwEhHbuvR23AFO_xSvcHw",
         authDomain: "scoreboard-basket-ea929.firebaseapp.com",
-        databaseURL: "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
+        databaseURL:
+          "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
         projectId: "scoreboard-basket-ea929",
         storageBucket: "scoreboard-basket-ea929.firebasestorage.app",
         messagingSenderId: "248063752824",
         appId: "1:248063752824:web:10eccbc425598daa748b8d",
-        measurementId: "G-8M1EGBQLNN"
       };
 
       firebase.initializeApp(firebaseConfig);
@@ -161,7 +179,7 @@
         return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
       }
 
-      // 🔥 LISTENER (HANYA TERIMA DATA)
+      // 🔥 REALTIME LISTENER
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
 
@@ -180,21 +198,29 @@
         if (currentData.logoB) logoB.src = currentData.logoB;
 
         if (currentData.colorA)
-          document.documentElement.style.setProperty("--teamA", currentData.colorA);
+          document.documentElement.style.setProperty(
+            "--teamA",
+            currentData.colorA
+          );
 
         if (currentData.colorB)
-          document.documentElement.style.setProperty("--teamB", currentData.colorB);
+          document.documentElement.style.setProperty(
+            "--teamB",
+            currentData.colorB
+          );
 
         teamAName.style.color = currentData.textColorA || "#ffffff";
         teamBName.style.color = currentData.textColorB || "#ffffff";
       });
 
-      // 🔥 TIMER LOOP (LOKAL → SMOOTH)
+      // 🔥 SMOOTH TIMER LOOP
       setInterval(() => {
         // GAME TIMER
         if (currentData.gameStart) {
           const now = Date.now();
-          const elapsed = Math.floor((now - currentData.gameStart) / 1000);
+          const elapsed = Math.floor(
+            (now - currentData.gameStart) / 1000
+          );
           const remaining = Math.max(
             0,
             (currentData.gameDuration || 0) - elapsed
@@ -208,7 +234,9 @@
         // SHOT CLOCK
         if (currentData.shotStart && currentData.shotOn) {
           const now = Date.now();
-          const elapsed = Math.floor((now - currentData.shotStart) / 1000);
+          const elapsed = Math.floor(
+            (now - currentData.shotStart) / 1000
+          );
           const remaining = Math.max(
             0,
             (currentData.shotDuration || 24) - elapsed
@@ -220,7 +248,7 @@
           shotclock.innerText = currentData.shot || 24;
           shotclock.style.display = currentData.shotOn ? "block" : "none";
         }
-      }, 200); // 🔥 update tiap 0.2 detik (super smooth)
+      }, 200);
     </script>
   </body>
 </html>
