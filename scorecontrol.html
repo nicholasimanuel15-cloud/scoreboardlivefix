@@ -9,7 +9,7 @@
 
     <style>
       body {
-        background: black;
+        background: #111;
         color: white;
         font-family: Arial;
         padding: 20px;
@@ -22,7 +22,10 @@
       }
 
       .section {
-        margin-bottom: 20px;
+        margin-bottom: 25px;
+        padding: 15px;
+        background: #1c1c1c;
+        border-radius: 10px;
       }
 
       .row {
@@ -30,15 +33,31 @@
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
+        margin-top: 10px;
       }
 
       button {
-        padding: 6px 12px;
+        padding: 8px 14px;
         cursor: pointer;
+        border: none;
+        border-radius: 6px;
+        background: #333;
+        color: white;
+      }
+
+      button:hover {
+        background: #555;
       }
 
       input {
-        padding: 5px;
+        padding: 6px;
+        border-radius: 5px;
+        border: none;
+      }
+
+      h3 {
+        margin: 0;
+        margin-bottom: 5px;
       }
     </style>
   </head>
@@ -57,11 +76,6 @@
 
       firebase.initializeApp(firebaseConfig);
       const db = firebase.database();
-
-      let serverOffset = 0;
-      firebase.database().ref(".info/serverTimeOffset").on("value", (snap) => {
-        serverOffset = snap.val() || 0;
-      });
 
       let data = {};
 
@@ -91,11 +105,6 @@
         reader.readAsDataURL(e.target.files[0]);
       }
 
-      function randomColor(t) {
-        let c = "#" + Math.floor(Math.random() * 16777215).toString(16);
-        save({ ["color" + t]: c });
-      }
-
       function setColor(t, color) {
         save({ ["color" + t]: color });
       }
@@ -104,9 +113,9 @@
         save({ ["textColor" + t]: color });
       }
 
-      /* SCORE */
+      /* 🔥 SCORE (UPDATE ADA MINUS) */
       function addScore(t, v) {
-        let newScore = (data["score" + t] || 0) + v;
+        let newScore = Math.max(0, (data["score" + t] || 0) + v);
         save({ ["score" + t]: newScore });
       }
 
@@ -116,144 +125,36 @@
 
       /* FOUL */
       function addFoul(t) {
-        let newFoul = (data["foul" + t] || 0) + 1;
-        save({ ["foul" + t]: newFoul });
+        save({ ["foul" + t]: (data["foul" + t] || 0) + 1 });
       }
 
       function minusFoul(t) {
-        let newFoul = Math.max(0, (data["foul" + t] || 0) - 1);
-        save({ ["foul" + t]: newFoul });
+        save({ ["foul" + t]: Math.max(0, (data["foul" + t] || 0) - 1) });
       }
 
       function resetFoul() {
         save({ foulA: 0, foulB: 0 });
       }
-
-      /* TIMER */
-      function setTime() {
-        let m = parseInt(min.value) || 0;
-        let s = parseInt(sec.value) || 0;
-        let total = m * 60 + s;
-
-        save({
-          time: total,
-          defaultTime: total,
-          gameStart: null,
-        });
-      }
-
-      function startGame() {
-        const now = Date.now() + serverOffset;
-        save({
-          gameStart: now,
-          gameDuration: data.time || 0,
-        });
-      }
-
-      function pauseGame() {
-        if (!data.gameStart) return;
-
-        const now = Date.now() + serverOffset;
-        let elapsed = Math.ceil((now - data.gameStart) / 1000);
-        let remaining = Math.max(0, (data.gameDuration || 0) - elapsed);
-
-        save({
-          time: remaining,
-          gameStart: null,
-        });
-      }
-
-      function resetTimer() {
-        save({
-          time: data.defaultTime || 600,
-          gameStart: null,
-        });
-      }
-
-      /* QUARTER */
-      function nextQuarter() {
-        let q = Math.min(4, (data.q || 1) + 1);
-
-        save({
-          q: q,
-          time: data.defaultTime || 600,
-          gameStart: null,
-        });
-      }
-
-      function resetQuarter() {
-        save({
-          q: 1,
-          time: data.defaultTime || 600,
-          gameStart: null,
-        });
-      }
-
-      /* SHOT CLOCK */
-      function startShot() {
-        if (!data.shotOn) return;
-
-        const now = Date.now() + serverOffset;
-        save({
-          shotStart: now,
-          shotDuration: 24,
-        });
-      }
-
-      function pauseShot() {
-        if (!data.shotStart) return;
-
-        const now = Date.now() + serverOffset;
-        let elapsed = Math.floor((now - data.shotStart) / 1000);
-        let duration = data.shotDuration || 24;
-        let remaining = duration - (elapsed % duration);
-
-        save({
-          shot: remaining,
-          shotStart: null,
-        });
-      }
-
-      function resetShot() {
-        save({
-          shot: 24,
-          shotStart: null,
-        });
-      }
-
-      function toggleShot() {
-        let newState = !data.shotOn;
-        const now = Date.now() + serverOffset;
-
-        save({
-          shotOn: newState,
-          shotStart: newState ? now : null,
-          shotDuration: 24,
-        });
-      }
     </script>
 
     <div class="container">
+      <!-- LEFT -->
       <div>
 
-        <!-- 🔥 JUDUL (TAMBAHAN) -->
         <div class="section">
-          <h3>JUDUL PERTANDINGAN</h3>
+          <h3>JUDUL</h3>
           <div class="row">
-            <input placeholder="FINAL - TEAM A vs TEAM B"
-                   oninput="setMatchTitle(this.value)" />
+            <input placeholder="GROUP PHASE" oninput="setMatchTitle(this.value)" />
           </div>
-        </div
+        </div>
 
-    <!-- UI (TIDAK DIUBAH) -->
-    <div class="container">
-      <div>
         <div class="section">
-          <h3>NAMA TEAM</h3>
+          <h3>TEAM</h3>
           <div class="row">
             <input placeholder="Team A" oninput="setName('A', this.value)" />
             <input type="color" onchange="setTextColor('A', this.value)" />
-
+          </div>
+          <div class="row">
             <input placeholder="Team B" oninput="setName('B', this.value)" />
             <input type="color" onchange="setTextColor('B', this.value)" />
           </div>
@@ -270,28 +171,37 @@
         <div class="section">
           <h3>WARNA TEAM</h3>
           <div class="row">
-            Team A:
-            <button onclick="randomColor('A')">Random</button>
             <input type="color" onchange="setColor('A', this.value)" />
-
-            Team B:
-            <button onclick="randomColor('B')">Random</button>
             <input type="color" onchange="setColor('B', this.value)" />
           </div>
         </div>
 
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+
         <div class="section">
           <h3>SKOR</h3>
+
           <div class="row">
             Team A:
+            <button onclick="addScore('A', -1)">-1</button>
             <button onclick="addScore('A', 1)">+1</button>
             <button onclick="addScore('A', 2)">+2</button>
             <button onclick="addScore('A', 3)">+3</button>
+          </div>
 
+          <div class="row">
             Team B:
+            <button onclick="addScore('B', -1)">-1</button>
             <button onclick="addScore('B', 1)">+1</button>
             <button onclick="addScore('B', 2)">+2</button>
             <button onclick="addScore('B', 3)">+3</button>
+          </div>
+
+          <div class="row">
+            <button onclick="resetScore()">RESET SCORE</button>
           </div>
         </div>
 
@@ -307,52 +217,7 @@
             <button onclick="minusFoul('B')">-</button>
           </div>
         </div>
-      </div>
 
-      <div>
-        <div class="section">
-          <h3>RESET</h3>
-          <div class="row">
-            <button onclick="resetScore()">Score</button>
-            <button onclick="resetFoul()">Foul</button>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>SET WAKTU</h3>
-          <div class="row">
-            <input id="min" placeholder="Min" />
-            <input id="sec" placeholder="Sec" />
-            <button onclick="setTime()">SET</button>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>TIMER</h3>
-          <div class="row">
-            <button onclick="startGame()">START</button>
-            <button onclick="pauseGame()">PAUSE</button>
-            <button onclick="resetTimer()">RESET</button>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>QUARTER</h3>
-          <div class="row">
-            <button onclick="nextQuarter()">NEXT</button>
-            <button onclick="resetQuarter()">RESET</button>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>SHOT CLOCK</h3>
-          <div class="row">
-            <button onclick="startShot()">START</button>
-            <button onclick="pauseShot()">PAUSE</button>
-            <button onclick="resetShot()">RESET</button>
-            <button onclick="toggleShot()">ON/OFF</button>
-          </div>
-        </div>
       </div>
     </div>
   </body>
