@@ -20,6 +20,19 @@
         --teamB: #1d428a;
       }
 
+      /* 🔥 JUDUL (TAMBAHAN) */
+      .matchTitle {
+        position: absolute;
+        bottom: 30px;
+        left: calc(50% - 420px);
+        background: rgba(0, 0, 0, 0.85);
+        color: white;
+        padding: 8px 16px;
+        font-weight: bold;
+        border-radius: 10px 0 0 10px;
+        letter-spacing: 1px;
+      }
+
       /* 🔥 MAIN CONTAINER */
       .scoreboard {
         position: absolute;
@@ -62,21 +75,18 @@
         justify-content: flex-end;
       }
 
-      /* 🔥 LOGO (DIPERBESAR) */
       .team img {
         width: 40px;
         height: 40px;
         object-fit: contain;
       }
 
-      /* 🔥 NAMA TEAM (DIPERBESAR) */
       .team span {
         font-size: 18px;
         font-weight: bold;
         letter-spacing: 1px;
       }
 
-      /* 🔥 FOUL */
       .foulTeam {
         margin-top: 4px;
         font-size: 11px;
@@ -95,7 +105,6 @@
         font-weight: bold;
       }
 
-      /* 🔥 TEAM COLORS */
       .teamA {
         background: linear-gradient(135deg, var(--teamA), #000);
       }
@@ -104,7 +113,6 @@
         background: linear-gradient(135deg, #000, var(--teamB));
       }
 
-      /* 🔥 SCORE */
       .score {
         background: #111;
         color: white;
@@ -119,7 +127,6 @@
         border-right: 2px solid rgba(255, 255, 255, 0.1);
       }
 
-      /* 🔥 CENTER (TIMER + QUARTER) */
       .center {
         background: #000;
         color: #fff;
@@ -149,7 +156,6 @@
         letter-spacing: 1px;
       }
 
-      /* 🔥 SHOT CLOCK */
       .shotclock {
         background: #ff3b30;
         color: white;
@@ -168,8 +174,12 @@
   </head>
 
   <body>
-    <div class="scoreboard">
 
+    <!-- 🔥 JUDUL -->
+    <div id="matchTitle" class="matchTitle">MATCH TITLE</div>
+
+    <div class="scoreboard">
+      
       <!-- 🔴 TEAM A -->
       <div class="team teamA">
         <div class="teamTop">
@@ -234,6 +244,8 @@
 
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
+
+        matchTitle.innerText = currentData.matchTitle || "MATCH TITLE";
 
         scoreA.innerText = currentData.scoreA || 0;
         scoreB.innerText = currentData.scoreB || 0;
