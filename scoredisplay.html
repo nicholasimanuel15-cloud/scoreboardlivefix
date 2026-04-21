@@ -40,8 +40,7 @@
         padding: 8px 14px;
         color: white;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        align-items: center;
         min-width: 150px;
       }
 
@@ -49,6 +48,7 @@
         display: flex;
         align-items: center;
         gap: 6px;
+        width: 100%;
       }
 
       .team img {
@@ -61,28 +61,31 @@
         letter-spacing: 1px;
       }
 
-      /* 🔥 FOUL (pakai garis pemisah) */
-      .foul {
-        margin-top: 6px;
-        padding-top: 4px;
-        border-top: 1px solid rgba(255,255,255,0.2);
-        font-size: 11px;
+      /* 🔥 FOUL INLINE (rapat ala NBA) */
+      .foulInline {
         display: flex;
-        justify-content: space-between;
+        align-items: center;
+        gap: 3px;
+        font-size: 11px;
         opacity: 0.9;
+        margin-left: 6px;
+        background: rgba(255,255,255,0.1);
+        padding: 2px 6px;
+        border-radius: 6px;
       }
 
-      .foul span:last-child {
+      .foulInline span {
         font-weight: bold;
       }
 
-      /* 🔥 TEAM COLORS */
+      /* TEAM COLORS */
       .teamA {
         background: linear-gradient(135deg, var(--teamA), #000);
       }
 
       .teamB {
         background: linear-gradient(135deg, #000, var(--teamB));
+        justify-content: flex-end;
       }
 
       /* 🔥 SCORE */
@@ -133,11 +136,9 @@
         padding: 10px;
         font-weight: bold;
         min-width: 55px;
-        text-align: center;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-left: 2px solid rgba(0,0,0,0.5);
       }
     </style>
   </head>
@@ -149,10 +150,10 @@
         <div class="teamTop">
           <img id="logoA" />
           <span id="teamAName">TEAM A</span>
-        </div>
-        <div class="foul">
-          <span>FOUL</span>
-          <span id="foulA">0</span>
+          <div class="foulInline">
+            <span>F</span>
+            <span id="foulA">0</span>
+          </div>
         </div>
       </div>
 
@@ -169,12 +170,12 @@
       <!-- TEAM B -->
       <div class="team teamB">
         <div class="teamTop">
+          <div class="foulInline">
+            <span id="foulB">0</span>
+            <span>F</span>
+          </div>
           <span id="teamBName">TEAM B</span>
           <img id="logoB" />
-        </div>
-        <div class="foul">
-          <span>FOUL</span>
-          <span id="foulB">0</span>
         </div>
       </div>
 
@@ -204,7 +205,6 @@
         return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
       }
 
-      // 🔥 REALTIME LISTENER
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
 
@@ -223,49 +223,29 @@
         if (currentData.logoB) logoB.src = currentData.logoB;
 
         if (currentData.colorA)
-          document.documentElement.style.setProperty(
-            "--teamA",
-            currentData.colorA
-          );
+          document.documentElement.style.setProperty("--teamA", currentData.colorA);
 
         if (currentData.colorB)
-          document.documentElement.style.setProperty(
-            "--teamB",
-            currentData.colorB
-          );
+          document.documentElement.style.setProperty("--teamB", currentData.colorB);
 
         teamAName.style.color = currentData.textColorA || "#ffffff";
         teamBName.style.color = currentData.textColorB || "#ffffff";
       });
 
-      // 🔥 TIMER LOOP
       setInterval(() => {
-        // GAME TIMER
         if (currentData.gameStart) {
           const now = Date.now();
-          const elapsed = Math.floor(
-            (now - currentData.gameStart) / 1000
-          );
-          const remaining = Math.max(
-            0,
-            (currentData.gameDuration || 0) - elapsed
-          );
-
+          const elapsed = Math.floor((now - currentData.gameStart) / 1000);
+          const remaining = Math.max(0, (currentData.gameDuration || 0) - elapsed);
           timer.innerText = formatTime(remaining);
         } else {
           timer.innerText = formatTime(currentData.time || 0);
         }
 
-        // SHOT CLOCK
         if (currentData.shotStart && currentData.shotOn) {
           const now = Date.now();
-          const elapsed = Math.floor(
-            (now - currentData.shotStart) / 1000
-          );
-          const remaining = Math.max(
-            0,
-            (currentData.shotDuration || 24) - elapsed
-          );
+          const elapsed = Math.floor((now - currentData.shotStart) / 1000);
+          const remaining = Math.max(0, (currentData.shotDuration || 24) - elapsed);
 
           shotclock.innerText = remaining;
           shotclock.style.display = "flex";
