@@ -20,7 +20,7 @@
         --teamB: #1d428a;
       }
 
-      /* 🔥 JUDUL (TAMBAHAN) */
+      /* 🔥 JUDUL (FIX + Z-INDEX) */
       .matchTitle {
         position: absolute;
         bottom: 30px;
@@ -31,6 +31,7 @@
         font-weight: bold;
         border-radius: 10px 0 0 10px;
         letter-spacing: 1px;
+        z-index: 9999; /* 🔥 BIAR TIDAK KETUTUP */
       }
 
       /* 🔥 MAIN CONTAINER */
@@ -50,7 +51,6 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
       }
 
-      /* 🔥 TEAM */
       .team {
         padding: 10px 16px;
         color: white;
@@ -179,7 +179,7 @@
     <div id="matchTitle" class="matchTitle">MATCH TITLE</div>
 
     <div class="scoreboard">
-      
+
       <!-- 🔴 TEAM A -->
       <div class="team teamA">
         <div class="teamTop">
@@ -245,7 +245,9 @@
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
 
-        matchTitle.innerText = currentData.matchTitle || "MATCH TITLE";
+        // 🔥 FIX AMAN
+        document.getElementById("matchTitle").innerText =
+          currentData.matchTitle || "MATCH TITLE";
 
         scoreA.innerText = currentData.scoreA || 0;
         scoreB.innerText = currentData.scoreB || 0;
