@@ -23,19 +23,24 @@
       /* 🔥 JUDUL (FIX + Z-INDEX) */
       .matchTitle {
         position: absolute;
-        bottom: 85px; /* 🔥 naik ke atas scoreboard */
-        left: 50%;
-        transform: translateX(-50%); /* 🔥 biar center */
+        bottom: 30px; /* 🔥 sejajar scoreboard */
+        left: calc(50% - 420px); /* 🔥 posisi kiri scoreboard (sesuaikan lebar) */
+
+        height: 100%; /* 🔥 samain tinggi dengan scoreboard */
+        display: flex;
+        align-items: center; /* 🔥 vertical center */
+        justify-content: center;
 
         background: rgba(0, 0, 0, 0.85);
         color: white;
-        padding: 8px 20px;
+        padding: 0 20px;
+
         font-weight: bold;
-        border-radius: 10px;
         letter-spacing: 1px;
 
+        border-radius: 10px 0 0 10px;
+
         z-index: 9999;
-        text-align: center;
         min-width: 200px;
       }
 
