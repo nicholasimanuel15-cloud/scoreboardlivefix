@@ -14,7 +14,7 @@
         font-family: Arial, sans-serif;
       }
 
-      /* 🔥 CONTAINER */
+      /* 🔥 MAIN BAR */
       .scoreboard {
         position: absolute;
         bottom: 30px;
@@ -24,26 +24,31 @@
         align-items: center;
         background: linear-gradient(90deg, #0a2a66, #0f3c9c);
         color: white;
-        border-radius: 8px;
+        border-radius: 10px;
         overflow: hidden;
         box-shadow: 0 6px 20px rgba(0,0,0,0.5);
       }
 
-      /* 🔥 LEFT INFO */
       .left {
         padding: 6px 12px;
         font-size: 12px;
         background: rgba(255,255,255,0.1);
       }
 
-      /* 🔥 TEAM */
+      /* 🔥 TEAM BLOCK */
       .team {
+        display: flex;
+        flex-direction: column;
+        padding: 6px 12px;
+        min-width: 140px;
+      }
+
+      .teamTop {
         display: flex;
         align-items: center;
         gap: 6px;
-        padding: 0 12px;
+        font-size: 16px;
         font-weight: bold;
-        font-size: 18px;
       }
 
       .team img {
@@ -51,11 +56,34 @@
         height: 22px;
       }
 
-      /* 🔥 SCORE */
-      .score {
-        font-size: 26px;
+      /* 🔥 FOUL DI BAWAH */
+      .foul {
+        font-size: 10px;
+        opacity: 0.8;
+        margin-top: 2px;
+      }
+
+      .teamA {
+        align-items: flex-start;
+      }
+
+      .teamB {
+        align-items: flex-end;
+        text-align: right;
+      }
+
+      /* 🔥 VS */
+      .vs {
+        font-size: 18px;
         font-weight: bold;
         padding: 0 10px;
+      }
+
+      /* 🔥 SCORE (optional tetap ada kalau mau dipakai nanti) */
+      .score {
+        font-size: 24px;
+        font-weight: bold;
+        padding: 0 6px;
       }
 
       /* 🔥 CENTER INFO */
@@ -76,59 +104,50 @@
         font-weight: bold;
       }
 
-      /* 🔥 SHOT CLOCK */
+      /* 🔥 SHOTCLOCK */
       .shotclock {
         background: #1e90ff;
-        padding: 6px 10px;
+        padding: 6px 12px;
         font-weight: bold;
-        border-left: 1px solid rgba(255,255,255,0.2);
-      }
-
-      /* 🔥 FOUL */
-      .foul {
-        font-size: 10px;
-        opacity: 0.8;
-        margin-left: 4px;
       }
     </style>
   </head>
 
   <body>
     <div class="scoreboard">
-      
-      <!-- LEFT LABEL -->
+
+      <!-- LEFT -->
       <div class="left">GROUP PHASE</div>
 
       <!-- TEAM A -->
-      <div class="team">
-        <img id="logoA" />
-        <span id="teamAName">AAA</span>
-        <span class="foul">F <span id="foulA">0</span></span>
+      <div class="team teamA">
+        <div class="teamTop">
+          <img id="logoA" />
+          <span id="teamAName">AAA</span>
+        </div>
+        <div class="foul">F <span id="foulA">0</span></div>
       </div>
 
-      <!-- SCORE -->
-      <div class="score" id="scoreA">0</div>
-
-      <!-- DASH -->
-      <div class="score">-</div>
-
-      <div class="score" id="scoreB">0</div>
+      <!-- VS -->
+      <div class="vs">VS</div>
 
       <!-- TEAM B -->
-      <div class="team">
-        <span id="teamBName">BBB</span>
-        <img id="logoB" />
-        <span class="foul">F <span id="foulB">0</span></span>
+      <div class="team teamB">
+        <div class="teamTop">
+          <span id="teamBName">BBB</span>
+          <img id="logoB" />
+        </div>
+        <div class="foul">F <span id="foulB">0</span></div>
       </div>
 
       <!-- CENTER INFO -->
       <div class="center">
         <span class="quarter" id="quarter">Q1</span>
-        <span class="timer" id="timer">10:00</span>
+        <span class="timer" id="timer">01:00</span>
       </div>
 
-      <!-- SHOT CLOCK -->
-      <div class="shotclock" id="shotclock">24</div>
+      <!-- SHOTCLOCK -->
+      <div class="shotclock" id="shotclock">20</div>
     </div>
 
     <script>
@@ -156,9 +175,6 @@
 
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
-
-        scoreA.innerText = currentData.scoreA || 0;
-        scoreB.innerText = currentData.scoreB || 0;
 
         foulA.innerText = currentData.foulA || 0;
         foulB.innerText = currentData.foulB || 0;
