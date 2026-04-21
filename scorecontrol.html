@@ -1,0 +1,351 @@
+
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        padding: 6px 12px;
+        cursor: pointer;
+      }
+
+      input {
+        padding: 5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCTYOFS3I-BpUZwEhHbuvR23AFO_xSvcHw",
+        authDomain: "scoreboard-basket-ea929.firebaseapp.com",
+        databaseURL: "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "scoreboard-basket-ea929",
+        storageBucket: "scoreboard-basket-ea929.firebasestorage.app",
+        messagingSenderId: "248063752824",
+        appId: "1:248063752824:web:10eccbc425598daa748b8d",
+        measurementId: "G-8M1EGBQLNN"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+
+      let serverOffset = 0;
+      firebase.database().ref(".info/serverTimeOffset").on("value", (snap) => {
+      serverOffset = snap.val() || 0;
+      });
+
+      let data = {
+        scoreA: 0,
+        scoreB: 0,
+        foulA: 0,
+        foulB: 0,
+        time: 600,
+        defaultTime: 600,
+        q: 1,
+        shot: 24,
+        shotOn: true,
+      };
+
+      // 🔥 REALTIME SYNC (BUKAN ONCE!)
+      db.ref("scoreboard").on("value", (snap) => {
+        if (snap.exists()) data = snap.val();
+      });
+
+      function save(obj) {
+        db.ref("scoreboard").update(obj);
+      }
+     
+      /* TEAM */
+      function setName(t, v) {
+        save({ ["team" + t + "Name"]: v });
+      }
+
+      function setLogo(e, t) {
+        let reader = new FileReader();
+        reader.onload = () => {
+          save({ ["logo" + t]: reader.result });
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      }
+
+      function randomColor(t) {
+        let c = "#" + Math.floor(Math.random() * 16777215).toString(16);
+        save({ ["color" + t]: c });
+      }
+
+      function setColor(t, color) {
+        save({ ["color" + t]: color });
+      }
+
+      function setTextColor(t, color) {
+        save({ ["textColor" + t]: color });
+      }
+
+      /* SCORE */
+      function addScore(t, v) {
+        let newScore = (data["score" + t] || 0) + v;
+        save({ ["score" + t]: newScore });
+      }
+
+      function resetScore() {
+        save({ scoreA: 0, scoreB: 0 });
+      }
+
+      /* FOUL */
+      function addFoul(t) {
+        let newFoul = (data["foul" + t] || 0) + 1;
+        save({ ["foul" + t]: newFoul });
+      }
+
+      function minusFoul(t) {
+        let newFoul = Math.max(0, (data["foul" + t] || 0) - 1);
+        save({ ["foul" + t]: newFoul });
+      }
+
+      function resetFoul() {
+        save({ foulA: 0, foulB: 0 });
+      }
+
+      /* TIMER (ANTI DELAY SYSTEM) */
+      function setTime() {
+        let m = parseInt(min.value) || 0;
+        let s = parseInt(sec.value) || 0;
+        let total = m * 60 + s;
+
+        save({
+          time: total,
+          defaultTime: total,
+          gameStart: null,
+        });
+      }
+
+      function startGame() {
+        firebase.database().ref(".info/serverTimeOffset").once("value", (snap) => {
+        const offset = snap.val() || 0;
+
+        const now = Date.now() + offset; // ini waktu server versi device
+
+          save({
+            gameStart: now,
+            gameDuration: data.time || 0,
+        });
+        });
+      }
+
+      function pauseGame() {
+        if (!data.gameStart) return;
+
+          firebase.database().ref(".info/serverTimeOffset").once("value", (snap) => {
+          const offset = snap.val() || 0;
+          const now = Date.now() + offset;
+
+          let elapsed = Math.floor((now - data.gameStart) / 1000);
+          let remaining = Math.max(0, (data.gameDuration || 0) - elapsed);
+
+      save({
+      time: remaining,
+      gameStart: null,
+    });
+  });
+}
+
+      function resetTimer() {
+        save({
+          time: data.defaultTime || 600,
+          gameStart: null,
+        });
+      }
+
+      /* QUARTER */
+      function nextQuarter() {
+        let q = Math.min(4, (data.q || 1) + 1);
+
+        save({
+          q: q,
+          time: data.defaultTime || 600,
+          gameStart: null,
+        });
+      }
+
+      function resetQuarter() {
+        save({
+          q: 1,
+          time: data.defaultTime || 600,
+          gameStart: null,
+        });
+      }
+
+      /* SHOT CLOCK (ANTI DELAY) */
+      function startShot() {
+        if (!data.shotOn) return;
+
+          firebase.database().ref(".info/serverTimeOffset").once("value", (snap) => {
+          const offset = snap.val() || 0;
+          const now = Date.now() + offset;
+
+        save({
+            shotStart: now,
+            shotDuration: 24, // langsung pakai 24 biar konsisten
+        });
+        });
+      }
+
+     function pauseShot() {
+      if (!data.shotStart) return;
+
+        firebase.database().ref(".info/serverTimeOffset").once("value", (snap) => {
+        const offset = snap.val() || 0;
+        const now = Date.now() + offset;
+
+        let elapsed = Math.floor((now - data.shotStart) / 1000);
+        let duration = data.shotDuration || 24;
+
+        let remaining = duration - (elapsed % duration);
+
+        save({
+            shot: remaining,
+            shotStart: null,
+       });
+       });
+      }
+
+      function resetShot() {
+        save({
+          shot: 24,
+          shotStart: null,
+        });
+      }
+
+      function toggleShot() {
+        let newState = !data.shotOn;
+
+        firebase.database().ref(".info/serverTimeOffset").once("value", (snap) => {
+        const offset = snap.val() || 0;
+        const now = Date.now() + offset;
+
+        save({
+          shotOn: newState,
+          shotStart: newState ? now : null,
+          shotDuration: 24,
+        });
+        });
+      }
+    </script>
+
+    <!-- UI (TIDAK DIUBAH) -->
+    <div class="container">
+      <div>
+        <div class="section">
+          <h3>NAMA TEAM</h3>
+          <div class="row">
+            <input placeholder="Team A" oninput="setName('A', this.value)" />
+            <input type="color" onchange="setTextColor('A', this.value)" />
+
+            <input placeholder="Team B" oninput="setName('B', this.value)" />
+            <input type="color" onchange="setTextColor('B', this.value)" />
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>LOGO</h3>
+          <div class="row">
+            <input type="file" onchange="setLogo(event, 'A')" />
+            <input type="file" onchange="setLogo(event, 'B')" />
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>WARNA TEAM</h3>
+          <div class="row">
+            Team A:
+            <button onclick="randomColor('A')">Random</button>
+            <input type="color" onchange="setColor('A', this.value)" />
+
+            Team B:
+            <button onclick="randomColor('B')">Random</button>
+            <input type="color" onchange="setColor('B', this.value)" />
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>SKOR</h3>
+          <div class="row">
+            Team A:
+            <button onclick="addScore('A', 1)">+1</button>
+            <button onclick="addScore('A', 2)">+2</button>
+            <button onclick="addScore('A', 3)">+3</button>
+
+            Team B:
+            <button onclick="addScore('B', 1)">+1</button>
+            <button onclick="addScore('B', 2)">+2</button>
+            <button onclick="addScore('B', 3)">+3</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>FOUL</h3>
+          <div class="row">
+            A:
+            <button onclick="addFoul('A')">+</button>
+            <button onclick="minusFoul('A')">-</button>
+
+            B:
+            <button onclick="addFoul('B')">+</button>
+            <button onclick="minusFoul('B')">-</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section">
+          <h3>RESET</h3>
+          <div class="row">
+            <button onclick="resetScore()">Score</button>
+            <button onclick="resetFoul()">Foul</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>SET WAKTU</h3>
+          <div class="row">
+            <input id="min" placeholder="Min" />
+            <input id="sec" placeholder="Sec" />
+            <button onclick="setTime()">SET</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>TIMER</h3>
+          <div class="row">
+            <button onclick="startGame()">START</button>
+            <button onclick="pauseGame()">PAUSE</button>
+            <button onclick="resetTimer()">RESET</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>QUARTER</h3>
+          <div class="row">
+            <button onclick="nextQuarter()">NEXT</button>
+            <button onclick="resetQuarter()">RESET</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>SHOT CLOCK</h3>
+          <div class="row">
+            <button onclick="startShot()">START</button>
+            <button onclick="pauseShot()">PAUSE</button>
+            <button onclick="resetShot()">RESET</button>
+            <button onclick="toggleShot()">ON/OFF</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

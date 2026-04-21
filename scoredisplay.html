@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Scoreboard Display</title>
+
+    <!-- 🔥 FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        background: transparent;
+        font-family: Arial;
+      }
+
+      :root {
+        --teamA: red;
+        --teamB: blue;
+      }
+
+      .scoreboard {
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+      }
+
+      .team {
+        padding: 10px 20px;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .teamTop {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .team img {
+        width: 35px;
+        height: 35px;
+      }
+
+      .team span {
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      }
+
+      .divider {
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(to right, transparent, white, transparent);
+        margin: 6px 0;
+      }
+
+      .foul {
+        font-size: 14px;
+        margin-top: 4px;
+      }
+
+      .teamA {
+        background: var(--teamA);
+      }
+      .teamB {
+        background: var(--teamB);
+      }
+
+      .score {
+        background: black;
+        color: white;
+        font-size: 40px;
+        padding: 10px 20px;
+        margin: 0 10px;
+        border-radius: 8px;
+      }
+
+      .center {
+        background: black;
+        color: yellow;
+        font-size: 28px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .quarter {
+        color: white;
+        font-size: 14px;
+      }
+
+      .shotclock {
+        background: orange;
+        color: black;
+        font-size: 28px;
+        padding: 10px;
+        margin-left: 10px;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="scoreboard">
+      <div class="team teamA">
+        <div class="teamTop">
+          <img id="logoA" />
+          <span id="teamAName">TEAM A</span>
+        </div>
+        <div class="divider"></div>
+        <div class="foul">FOUL: <span id="foulA">0</span></div>
+      </div>
+
+      <div class="score" id="scoreA">0</div>
+
+      <div class="center">
+        <div id="timer">10:00</div>
+        <div class="quarter" id="quarter">Q1</div>
+      </div>
+
+      <div class="score" id="scoreB">0</div>
+
+      <div class="team teamB">
+        <div class="teamTop">
+          <span id="teamBName">TEAM B</span>
+          <img id="logoB" />
+        </div>
+        <div class="divider"></div>
+        <div class="foul">FOUL: <span id="foulB">0</span></div>
+      </div>
+
+      <div class="shotclock" id="shotclock">24</div>
+    </div>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyCTYOFS3I-BpUZwEhHbuvR23AFO_xSvcHw",
+        authDomain: "scoreboard-basket-ea929.firebaseapp.com",
+        databaseURL:
+          "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "scoreboard-basket-ea929",
+        storageBucket: "scoreboard-basket-ea929.firebasestorage.app",
+        messagingSenderId: "248063752824",
+        appId: "1:248063752824:web:10eccbc425598daa748b8d",
+        measurementId: "G-8M1EGBQLNN",
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+
+      let currentData = {};
+
+      function formatTime(t) {
+        let m = Math.floor(t / 60);
+        let s = t % 60;
+        return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+      }
+
+      // 🔥 LISTENER (HANYA TERIMA DATA)
+      db.ref("scoreboard").on("value", (snapshot) => {
+        currentData = snapshot.val() || {};
+
+        scoreA.innerText = currentData.scoreA || 0;
+        scoreB.innerText = currentData.scoreB || 0;
+
+        foulA.innerText = currentData.foulA || 0;
+        foulB.innerText = currentData.foulB || 0;
+
+        quarter.innerText = "Q" + (currentData.q || 1);
+
+        teamAName.innerText = currentData.teamAName || "TEAM A";
+        teamBName.innerText = currentData.teamBName || "TEAM B";
+
+        if (currentData.logoA) logoA.src = currentData.logoA;
+        if (currentData.logoB) logoB.src = currentData.logoB;
+
+        if (currentData.colorA)
+          document.documentElement.style.setProperty(
+            "--teamA",
+            currentData.colorA,
+          );
+
+        if (currentData.colorB)
+          document.documentElement.style.setProperty(
+            "--teamB",
+            currentData.colorB,
+          );
+
+        teamAName.style.color = currentData.textColorA || "#ffffff";
+        teamBName.style.color = currentData.textColorB || "#ffffff";
+      });
+
+      // 🔥 TIMER LOOP (LOKAL → SMOOTH)
+      setInterval(() => {
+        // GAME TIMER
+        if (currentData.gameStart) {
+          const now = Date.now();
+          const elapsed = Math.floor((now - currentData.gameStart) / 1000);
+          const remaining = Math.max(
+            0,
+            (currentData.gameDuration || 0) - elapsed,
+          );
+
+          timer.innerText = formatTime(remaining);
+        } else {
+          timer.innerText = formatTime(currentData.time || 0);
+        }
+
+        // SHOT CLOCK
+        if (currentData.shotStart && currentData.shotOn) {
+          const now = Date.now();
+          const elapsed = Math.floor((now - currentData.shotStart) / 1000);
+          const remaining = Math.max(
+            0,
+            (currentData.shotDuration || 24) - elapsed,
+          );
+
+          shotclock.innerText = remaining;
+          shotclock.style.display = "block";
+        } else {
+          shotclock.innerText = currentData.shot || 24;
+          shotclock.style.display = currentData.shotOn ? "block" : "none";
+        }
+      }, 200); // 🔥 update tiap 0.2 detik (super smooth)
+    </script>
+  </body>
+</html>
