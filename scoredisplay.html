@@ -246,6 +246,13 @@
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
 
+         // 🔥 UPDATE FOUL COLOR DI SINI
+        document.querySelector(".teamA .foulTeam").style.color =
+          currentData.textColorA || "#ffffff";
+
+        document.querySelector(".teamB .foulTeam").style.color =
+          currentData.textColorB || "#ffffff";
+
         // 🔥 AUTO 2 BARIS
         let title = currentData.matchTitle || "GROUP PHASE";
         matchTitle.innerHTML = title.replace(" ", "<br>");
