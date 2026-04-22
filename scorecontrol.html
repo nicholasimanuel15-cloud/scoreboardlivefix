@@ -207,8 +207,13 @@
 
       /* TIMER */
       function setTime() {
-        let total = (parseInt(min.value)||0)*60 + (parseInt(sec.value)||0);
-        save({ time: total, defaultTime: total, gameStart: null });
+        let total = (parseInt(min.value) || 0) * 60 + (parseInt(sec.value) || 0);
+
+        save({
+          time: total,
+          defaultTime: total,  // 🔥 simpan waktu awal (misal 10 menit)
+          gameStart: null
+        });
       }
 
       function startGame() {
