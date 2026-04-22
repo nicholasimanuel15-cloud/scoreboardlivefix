@@ -24,7 +24,10 @@
         position: absolute;
         bottom: 30px;
         left: 50%;
-        transform: translateX(-50%);
+
+        transform: translateX(-50%) scale(0.65); /* 🔥 ukuran diperkecil */
+        transform-origin: bottom center; /* tetap anchor di bawah */
+
         display: flex;
         align-items: stretch;
 
