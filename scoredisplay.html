@@ -50,7 +50,7 @@
         font-weight: bold;
         letter-spacing: 1px;
 
-        border-right: 2px solid rgba(255,255,255,0.1);
+        border-right: 2px solid rgba(255, 255, 255, 0.1);
 
         text-align: center;
         line-height: 1.1;
@@ -76,8 +76,16 @@
         width: 100%;
       }
 
+      .teamA .teamTop {
+        justify-content: flex-start;
+      }
+
+      .teamB .teamTop {
+        justify-content: flex-end;
+      }
+
       .team img {
-        width: 60px;  /* 🔥 lebih besar */
+        width: 60px; /* 🔥 lebih besar */
         height: 60px;
         object-fit: contain;
 
@@ -88,25 +96,22 @@
         border: 3px solid white; /* 🔥 ring putih khas NBA */
 
         box-shadow:
-        0 0 6px rgba(0,0,0,0.6),   /* outer shadow */
-        inset 0 0 6px rgba(255,255,255,0.2); /* inner glow */
+          0 0 6px rgba(0, 0, 0, 0.6),
+          /* outer shadow */ inset 0 0 6px rgba(255, 255, 255, 0.2); /* inner glow */
       }
 
       .teamTop {
         display: flex;
         align-items: center;
-        justify-content: center; /* 🔥 paksa isi ke tengah */
-        gap: 12px;
+        width: 100%;
       }
 
       .team span {
         font-size: 18px;
         font-weight: bold;
         letter-spacing: 1px;
-
-        flex: none;              /* 🔥 jangan ikut dorongan flex */
-        width: 100%;             /* 🔥 ambil full lebar */
-        text-align: center;      /* 🔥 center horizontal */
+        flex: 1;
+        text-align: center; /* 🔥 ini yang bikin teks ke tengah */
       }
 
       .foulTeam {
@@ -164,7 +169,7 @@
         font-size: 30px;
         font-weight: 900;
 
-        color: #FFD700; /* emas */
+        color: #ffd700; /* emas */
       }
 
       .quarter {
@@ -193,11 +198,8 @@
 
   <body>
     <div class="scoreboard">
-      
       <!-- 🔥 MATCH TITLE -->
-      <div class="matchTitle" id="matchTitle">
-        GROUP<br>PHASE
-      </div>
+      <div class="matchTitle" id="matchTitle">GROUP<br />PHASE</div>
 
       <!-- 🔴 TEAM A -->
       <div class="team teamA">
@@ -205,9 +207,7 @@
           <img id="logoA" />
           <span id="teamAName">TEAM A</span>
         </div>
-        <div class="foulTeam">
-          FOUL <span id="foulA">0</span>
-        </div>
+        <div class="foulTeam">FOUL <span id="foulA">0</span></div>
       </div>
 
       <!-- 🔢 SCORE A -->
@@ -228,9 +228,7 @@
           <span id="teamBName">TEAM B</span>
           <img id="logoB" />
         </div>
-        <div class="foulTeam">
-          FOUL <span id="foulB">0</span>
-        </div>
+        <div class="foulTeam">FOUL <span id="foulB">0</span></div>
       </div>
 
       <!-- ⏱ SHOT CLOCK -->
@@ -241,7 +239,8 @@
       const firebaseConfig = {
         apiKey: "AIzaSy...",
         authDomain: "scoreboard-basket-ea929.firebaseapp.com",
-        databaseURL: "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
+        databaseURL:
+          "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
         projectId: "scoreboard-basket-ea929",
         storageBucket: "scoreboard-basket-ea929.firebasestorage.app",
         messagingSenderId: "248063752824",
@@ -262,7 +261,7 @@
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
 
-         // 🔥 UPDATE FOUL COLOR DI SINI
+        // 🔥 UPDATE FOUL COLOR DI SINI
         document.querySelector(".teamA .foulTeam").style.color =
           currentData.textColorA || "#ffffff";
 
@@ -288,10 +287,16 @@
         if (currentData.logoB) logoB.src = currentData.logoB;
 
         if (currentData.colorA)
-          document.documentElement.style.setProperty("--teamA", currentData.colorA);
+          document.documentElement.style.setProperty(
+            "--teamA",
+            currentData.colorA,
+          );
 
         if (currentData.colorB)
-          document.documentElement.style.setProperty("--teamB", currentData.colorB);
+          document.documentElement.style.setProperty(
+            "--teamB",
+            currentData.colorB,
+          );
 
         teamAName.style.color = currentData.textColorA || "#ffffff";
         teamBName.style.color = currentData.textColorB || "#ffffff";
@@ -301,7 +306,10 @@
         if (currentData.gameStart) {
           const now = Date.now();
           const elapsed = Math.floor((now - currentData.gameStart) / 1000);
-          const remaining = Math.max(0, (currentData.gameDuration || 0) - elapsed);
+          const remaining = Math.max(
+            0,
+            (currentData.gameDuration || 0) - elapsed,
+          );
           timer.innerText = formatTime(remaining);
         } else {
           timer.innerText = formatTime(currentData.time || 0);
@@ -310,7 +318,10 @@
         if (currentData.shotStart && currentData.shotOn) {
           const now = Date.now();
           const elapsed = Math.floor((now - currentData.shotStart) / 1000);
-          const remaining = Math.max(0, (currentData.shotDuration || 24) - elapsed);
+          const remaining = Math.max(
+            0,
+            (currentData.shotDuration || 24) - elapsed,
+          );
 
           shotclock.innerText = remaining;
           shotclock.style.display = "flex";
