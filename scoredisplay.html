@@ -27,6 +27,7 @@
         transform: translateX(-50%);
         display: flex;
         align-items: stretch;
+
         background: rgba(0, 0, 0, 0.9);
         border-radius: 10px;
         overflow: hidden;
@@ -35,15 +36,19 @@
       /* 🔥 MATCH TITLE */
       .matchTitle {
         background: #2f2f2f;
-        color: #fff;
+        color: #fff; /* abu-abu */
+
         display: flex;
         align-items: center;
         justify-content: center;
+
         padding: 10px 16px;
         font-size: 13px;
         font-weight: bold;
         letter-spacing: 1px;
+
         border-right: 2px solid rgba(255,255,255,0.1);
+
         text-align: center;
         line-height: 1.1;
         min-width: 110px;
@@ -56,6 +61,7 @@
         flex-direction: column;
         justify-content: center;
         min-width: 200px;
+
         box-shadow: none;
         background-image: none;
       }
@@ -67,8 +73,13 @@
         width: 100%;
       }
 
-      .teamA .teamTop { justify-content: flex-start; }
-      .teamB .teamTop { justify-content: flex-end; }
+      .teamA .teamTop {
+        justify-content: flex-start;
+      }
+
+      .teamB .teamTop {
+        justify-content: flex-end;
+      }
 
       .team img {
         width: 40px;
@@ -76,41 +87,40 @@
         object-fit: contain;
       }
 
+      .teamTop {
+        display: flex;
+        align-items: center;
+        width: 100%;
+      }
+
       .team span {
         font-size: 18px;
         font-weight: bold;
         letter-spacing: 1px;
         flex: 1;
-        text-align: center;
+        text-align: center; /* 🔥 ini yang bikin teks ke tengah */
       }
 
       .foulTeam {
         margin-top: 4px;
         font-size: 11px;
-        opacity: 0.9;
-      }
-
-      #foulAValue, #foulBValue {
-        color: inherit;
-        font-weight: bold;
-      }
-
-      .teamA {
-        background: var(--teamA);
-        --foulColor: #ffffff;
-      }
-
-      .teamB {
-        background: var(--teamB);
-        --foulColor: #ffffff;
+        opacity: 0.8;
       }
 
       .teamA .foulTeam,
       .teamB .foulTeam {
         text-align: center;
-        border-top: 4px solid var(--foulColor);
+        border-top: 4px solid rgba(255, 255, 255, 0.7);
         margin-top: 6px;
         padding-top: 6px;
+      }
+
+      .teamA {
+        background: var(--teamA);
+      }
+
+      .teamB {
+        background: var(--teamB);
       }
 
       .score {
@@ -119,8 +129,10 @@
         font-size: 52px;
         font-weight: 900;
         text-align: center;
+
         padding: 10px 20px;
         min-width: 80px;
+
         border-left: 2px solid rgba(255, 255, 255, 0.1);
         border-right: 2px solid rgba(255, 255, 255, 0.1);
       }
@@ -128,11 +140,14 @@
       .center {
         background: #000;
         color: #fff;
+
         display: flex;
         flex-direction: column;
         justify-content: center;
         text-align: center;
+
         padding: 6px 16px;
+
         border-left: 2px solid rgba(255, 255, 255, 0.1);
         border-right: 2px solid rgba(255, 255, 255, 0.1);
       }
@@ -140,7 +155,8 @@
       #timer {
         font-size: 30px;
         font-weight: 900;
-        color: #FFD700;
+
+        color: #FFD700; /* emas */
       }
 
       .quarter {
@@ -153,10 +169,13 @@
       .shotclock {
         background: #ff3b30;
         color: white;
+
         font-size: 30px;
         font-weight: bold;
+
         min-width: 55px;
         padding: 10px;
+
         display: flex;
         align-items: center;
         justify-content: center;
@@ -166,40 +185,47 @@
 
   <body>
     <div class="scoreboard">
+      
+      <!-- 🔥 MATCH TITLE -->
+      <div class="matchTitle" id="matchTitle">
+        GROUP<br>PHASE
+      </div>
 
-      <div class="matchTitle" id="matchTitle">GROUP<br>PHASE</div>
-
-      <!-- TEAM A -->
+      <!-- 🔴 TEAM A -->
       <div class="team teamA">
         <div class="teamTop">
           <img id="logoA" />
           <span id="teamAName">TEAM A</span>
         </div>
         <div class="foulTeam">
-          FOUL <span id="foulAValue">0</span>
+          FOUL <span id="foulA">0</span>
         </div>
       </div>
 
+      <!-- 🔢 SCORE A -->
       <div class="score" id="scoreA">0</div>
 
+      <!-- ⏱ CENTER -->
       <div class="center">
         <div id="timer">10:00</div>
         <div class="quarter" id="quarter">Q1</div>
       </div>
 
+      <!-- 🔢 SCORE B -->
       <div class="score" id="scoreB">0</div>
 
-      <!-- TEAM B -->
+      <!-- 🔵 TEAM B -->
       <div class="team teamB">
         <div class="teamTop">
           <span id="teamBName">TEAM B</span>
           <img id="logoB" />
         </div>
         <div class="foulTeam">
-          FOUL <span id="foulBValue">0</span>
+          FOUL <span id="foulB">0</span>
         </div>
       </div>
 
+      <!-- ⏱ SHOT CLOCK -->
       <div class="shotclock" id="shotclock">24</div>
     </div>
 
@@ -228,25 +254,22 @@
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
 
-        // 🔥 FOUL BORDER COLOR
-        document.querySelector(".teamA").style.setProperty(
-          "--foulColor",
-          currentData.textColorA || "#ffffff"
-        );
+         // 🔥 UPDATE FOUL COLOR DI SINI
+        document.querySelector(".teamA .foulTeam").style.color =
+          currentData.textColorA || "#ffffff";
 
-        document.querySelector(".teamB").style.setProperty(
-          "--foulColor",
-          currentData.textColorB || "#ffffff"
-        );
+        document.querySelector(".teamB .foulTeam").style.color =
+          currentData.textColorB || "#ffffff";
 
-        // SCOREBOARD DATA
-        matchTitle.innerHTML = (currentData.matchTitle || "GROUP PHASE").replace(" ", "<br>");
+        // 🔥 AUTO 2 BARIS
+        let title = currentData.matchTitle || "GROUP PHASE";
+        matchTitle.innerHTML = title.replace(" ", "<br>");
 
         scoreA.innerText = currentData.scoreA || 0;
         scoreB.innerText = currentData.scoreB || 0;
 
-        foulAValue.innerText = currentData.foulA || 0;
-        foulBValue.innerText = currentData.foulB || 0;
+        foulA.innerText = currentData.foulA || 0;
+        foulB.innerText = currentData.foulB || 0;
 
         quarter.innerText = "Q" + (currentData.q || 1);
 
