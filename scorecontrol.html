@@ -230,7 +230,11 @@
 
       /* QUARTER */
       function nextQuarter() {
-        save({ q: Math.min(4,(data.q||1)+1), gameStart:null });
+        save({
+          q: Math.min(4, (data.q || 1) + 1),
+          time: data.defaultTime || 600,  // 🔥 balik ke waktu awal (misal 10 menit)
+          gameStart: null                 // stop dulu biar tidak lanjut dari sisa waktu
+        });
       }
 
       function resetQuarter() {
