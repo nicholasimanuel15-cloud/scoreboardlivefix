@@ -107,10 +107,20 @@
         opacity: 0.8;
       }
 
+      .teamA {
+        background: var(--teamA);
+      --foulColor: #ffffff;
+      }
+
+      .teamB {
+        background: var(--teamB);
+      --foulColor: #ffffff;
+      }
+
       .teamA .foulTeam,
       .teamB .foulTeam {
         text-align: center;
-        border-top: 4px solid rgba(255, 255, 255, 0.7);
+        border-top: 4px solid var(--foulColor);
         margin-top: 6px;
         padding-top: 6px;
       }
@@ -254,11 +264,15 @@
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
 
-        document.querySelector(".teamA .foulTeam").style.color =
-          currentData.textColorA || "#ffffff";
+        document.querySelector(".teamA").style.setProperty(
+          "--foulColor",
+        currentData.textColorA || "#ffffff"
+        );
 
-        document.querySelector(".teamB .foulTeam").style.color =
-          currentData.textColorB || "#ffffff";
+        document.querySelector(".teamB").style.setProperty(
+          "--foulColor",
+        currentData.textColorB || "#ffffff"
+        );
 
         // 🔥 AUTO 2 BARIS
         let title = currentData.matchTitle || "GROUP PHASE";
