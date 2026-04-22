@@ -144,24 +144,27 @@
           handleShotEnd();
       });
 
-      function handleShotEnd() {
-        if (!data.shotStart) return;
+      <script>
+        function handleShotEnd() {
+          if (!data.shotStart) return;
 
-        const now = Date.now() + serverOffset;
+          const now = Date.now() + serverOffset;
 
-        const elapsed = Math.floor((now - data.shotStart) / 1000);
-        const duration = data.shotDuration || 24;
+          // 🔥 pakai CEIL biar gak loncat
+          const elapsed = Math.ceil((now - data.shotStart) / 1000);
+          const duration = data.shotDuration || 24;
 
-        const remaining = duration - elapsed;
+          const remaining = duration - elapsed;
 
-        if (remaining <= 0) {
-        save({
-          shot: 24,
-          shotStart: now + 1000,
-          shotDuration: 24
-        });
-      }
-    }
+          if (remaining <= 0) {
+            save({
+              shot: 24,
+              shotStart: now,        // 🔥 FIX (hapus +1000)
+              shotDuration: 24
+            });
+            }
+          }
+      </script>
 
       // 🔥 TARUH DI PALING BAWAH SCRIPT
         setInterval(() => {
@@ -264,17 +267,15 @@
         save({ q:1, gameStart:null });
       }
 
-      /* SHOT CLOCK */
       function startShot() {
         if (!data.shotOn) return;
 
-          let duration = data.shot || data.shotDuration || 24;
+        let duration = data.shot || data.shotDuration || 24;
 
-        // kalau sudah habis → reset ke 24
         if (duration <= 0) duration = 24;
 
           save({
-            shotStart: Date.now() + serverOffset,
+            shotStart: Date.now() + serverOffset + 200, // 🔥 anti delay
             shotDuration: duration
         });
       }
@@ -282,20 +283,17 @@
       function pauseShot() {
         if (!data.shotStart) return;
 
-          let now = Date.now() + serverOffset;
-          let elapsed = (now - data.shotStart) / 1000;
+        let now = Date.now() + serverOffset;
+        let elapsed = Math.ceil((now - data.shotStart) / 1000);
 
-          let remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
-  
-          // bulatkan ke bawah biar gak nambah 1 detik
-          remaining = Math.floor(remaining);
+        let remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
 
           save({
             shot: remaining,
             shotStart: null,
             shotDuration: remaining
-        });
-      }
+          });
+        }
 
       function resetShot() {
         save({ shot:24, shotStart:null });
