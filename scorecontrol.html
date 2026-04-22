@@ -39,11 +39,6 @@
         margin-top: 8px;
       }
 
-      /* 🔥 TARUH DI SINI */
-      .timer-gap {
-        margin-top: 20px;
-      }
-
       button {
         padding: 8px 12px;
         border: none;
@@ -55,15 +50,6 @@
 
       button:hover {
         background: #555;
-      }
-
-      .pause-btn {
-        background: #f1c40f;  /* 🔥 kuning lebih smooth */
-        color: #000;          /* teks hitam biar kontras */
-      }
-
-      .pause-btn:hover {
-        background: #f7d54a;  /* sedikit lebih terang saat hover */
       }
 
       input {
@@ -144,27 +130,24 @@
           handleShotEnd();
       });
 
-      <script>
-        function handleShotEnd() {
-          if (!data.shotStart) return;
+      function handleShotEnd() {
+        if (!data.shotStart) return;
 
-          const now = Date.now() + serverOffset;
+        const now = Date.now() + serverOffset;
 
-          // 🔥 pakai CEIL biar gak loncat
-          const elapsed = Math.ceil((now - data.shotStart) / 1000);
-          const duration = data.shotDuration || 24;
+        const elapsed = Math.floor((now - data.shotStart) / 1000);
+        const duration = data.shotDuration || 24;
 
-          const remaining = duration - elapsed;
+        const remaining = duration - elapsed;
 
-          if (remaining <= 0) {
-            save({
-              shot: 24,
-              shotStart: now,        // 🔥 FIX (hapus +1000)
-              shotDuration: 24
-            });
-            }
-          }
-      </script>
+        if (remaining <= 0) {
+        save({
+          shot: 24,
+          shotStart: now + 1000,
+          shotDuration: 24
+        });
+      }
+    }
 
       // 🔥 TARUH DI PALING BAWAH SCRIPT
         setInterval(() => {
@@ -224,13 +207,8 @@
 
       /* TIMER */
       function setTime() {
-        let total = (parseInt(min.value) || 0) * 60 + (parseInt(sec.value) || 0);
-
-        save({
-          time: total,
-          defaultTime: total,  // 🔥 patokan reset quarter
-          gameStart: null
-        });
+        let total = (parseInt(min.value)||0)*60 + (parseInt(sec.value)||0);
+        save({ time: total, defaultTime: total, gameStart: null });
       }
 
       function startGame() {
@@ -252,30 +230,24 @@
 
       /* QUARTER */
       function nextQuarter() {
-        db.ref("scoreboard").once("value").then(snap => {
-        let d = snap.val() || {};
-
-          save({
-            q: Math.min(4, (d.q || 1) + 1),
-            time: d.defaultTime || 600,  // 🔥 balik ke waktu awal
-            gameStart: null
-          });
-        });
+        save({ q: Math.min(4,(data.q||1)+1), gameStart:null });
       }
 
       function resetQuarter() {
         save({ q:1, gameStart:null });
       }
 
+      /* SHOT CLOCK */
       function startShot() {
         if (!data.shotOn) return;
 
-        let duration = data.shot || data.shotDuration || 24;
+          let duration = data.shot || data.shotDuration || 24;
 
+        // kalau sudah habis → reset ke 24
         if (duration <= 0) duration = 24;
 
           save({
-            shotStart: Date.now() + serverOffset + 200, // 🔥 anti delay
+            shotStart: Date.now() + serverOffset,
             shotDuration: duration
         });
       }
@@ -283,17 +255,20 @@
       function pauseShot() {
         if (!data.shotStart) return;
 
-        let now = Date.now() + serverOffset;
-        let elapsed = Math.ceil((now - data.shotStart) / 1000);
+          let now = Date.now() + serverOffset;
+          let elapsed = (now - data.shotStart) / 1000;
 
-        let remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
+          let remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
+  
+          // bulatkan ke bawah biar gak nambah 1 detik
+          remaining = Math.floor(remaining);
 
           save({
             shot: remaining,
             shotStart: null,
             shotDuration: remaining
-          });
-        }
+        });
+      }
 
       function resetShot() {
         save({ shot:24, shotStart:null });
@@ -328,7 +303,7 @@
   <div>
 
     <div class="section">
-      <h3>JUDUL PERTANDINGAN</h3>
+      <h3>JUDUL</h3>
       <input placeholder="GROUP PHASE" oninput="setMatchTitle(this.value)" />
     </div>
 
@@ -426,9 +401,9 @@
         <button onclick="setTime()">SET</button>
       </div>
 
-      <div class="row timer-gap">
+      <div class="row">
         <button class="start-btn" onclick="startGame()">START</button>
-        <button class="pause-btn" onclick="pauseGame()">PAUSE</button>
+        <button onclick="pauseGame()">PAUSE</button>
         <button class="reset-btn" onclick="resetTimer()">RESET</button>
       </div>
     </div>
@@ -438,7 +413,7 @@
       <h3>SHOT CLOCK</h3>
       <div class="row">
         <button class="start-btn" onclick="startShot()">START</button>
-        <button class="pause-btn" onclick="pauseShot()">PAUSE</button>
+        <button onclick="pauseShot()">PAUSE</button>
         <button class="reset-btn" onclick="resetShot()">RESET</button>
         <button onclick="toggleShot()">ON/OFF</button>
       </div>
