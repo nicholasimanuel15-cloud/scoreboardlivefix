@@ -60,10 +60,16 @@
 
       .big-btn {
         background: #ff3b30;
+        margin-top: 18px; /* 🔥 jarak aman */
+        opacity: 0.95;
       }
 
       .big-btn:hover {
         background: #ff5c50;
+      }
+
+      .reset-row {
+        margin-top: 20px; /* 🔥 jarak tambahan dari tombol lain */
       }
     </style>
   </head>
@@ -343,7 +349,8 @@
         <button onclick="addScore('B',3)">+3</button>
       </div>
 
-      <div class="row">
+      <!-- 🔥 dipisah & dikasih jarak -->
+      <div class="row reset-row">
         <button class="big-btn" onclick="resetScore()">RESET SCORE</button>
       </div>
     </div>
@@ -353,15 +360,16 @@
 
       <div class="row">
         Team A:
-        <button onclick="addFoul('A')">+</button>
-        <button onclick="minusFoul('A')">-</button>
+        <button onclick="addFoul('A')">plus</button>
+        <button onclick="minusFoul('A')">minus</button>
 
         Team B:
-        <button onclick="addFoul('B')">+</button>
-        <button onclick="minusFoul('B')">-</button>
+        <button onclick="addFoul('B')">plus</button>
+        <button onclick="minusFoul('B')">minus</button>
       </div>
 
-      <div class="row">
+      <!-- 🔥 dipisah & dikasih jarak -->
+      <div class="row reset-row">
         <button class="big-btn" onclick="resetFoul()">RESET FOUL</button>
       </div>
     </div>
