@@ -81,6 +81,15 @@
       .reset-btn:hover {
         background: #ff5c50;
       }
+
+      .start-btn {
+        background: #34c759; /* 🟢 hijau */
+        color: white;
+      }
+
+      .start-btn:hover {
+        background: #4cd964;
+      }
     </style>
   </head>
 
@@ -393,7 +402,7 @@
       </div>
 
       <div class="row">
-        <button onclick="startGame()">START</button>
+        <button class="start-btn" onclick="startGame()">START</button>
         <button onclick="pauseGame()">PAUSE</button>
         <button class="reset-btn" onclick="resetTimer()">RESET</button>
       </div>
@@ -403,7 +412,7 @@
     <div class="section">
       <h3>SHOT CLOCK</h3>
       <div class="row">
-        <button onclick="startShot()">START</button>
+        <button class="start-btn" onclick="startShot()">START</button>
         <button onclick="pauseShot()">PAUSE</button>
         <button class="reset-btn" onclick="resetShot()">RESET</button>
         <button onclick="toggleShot()">ON/OFF</button>
