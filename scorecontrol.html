@@ -211,7 +211,7 @@
 
         save({
           time: total,
-          defaultTime: total,  // 🔥 simpan waktu awal (misal 10 menit)
+          defaultTime: total,  // 🔥 patokan reset quarter
           gameStart: null
         });
       }
@@ -235,10 +235,14 @@
 
       /* QUARTER */
       function nextQuarter() {
+        db.ref("scoreboard").once("value").then(snap => {
+        let d = snap.val() || {};
+
         save({
-          q: Math.min(4, (data.q || 1) + 1),
-          time: data.defaultTime || 600,  // 🔥 balik ke waktu awal (misal 10 menit)
-          gameStart: null                 // stop dulu biar tidak lanjut dari sisa waktu
+          q: Math.min(4, (d.q || 1) + 1),
+          time: d.defaultTime || 600,  // 🔥 balik ke waktu awal
+          gameStart: null
+          });
         });
       }
 
