@@ -100,10 +100,25 @@
           // kalau nanti dipakai di display scoreboard
           window.teamAColor = aColor;
           window.teamBColor = bColor;
-
-          // 🔥 TAMBAHKAN INI
-          handleShotEnd();
       });
+
+      function handleShotEnd() {
+        if (!data.shotStart) return;
+
+        let now = Date.now() + serverOffset;
+        let elapsed = Math.floor((now - data.shotStart) / 1000);
+
+        let remaining = (data.shotDuration || 24) - elapsed;
+
+        if (remaining <= 0) {
+        // 🔥 reset dan langsung jalan lagi
+          save({
+            shot: 24,
+            shotStart: Date.now() + serverOffset,
+            shotDuration: 24
+        });
+      }
+    }
 
       function save(obj) {
         db.ref("scoreboard").update(obj);
@@ -207,14 +222,17 @@
         if (!data.shotStart) return;
 
           let now = Date.now() + serverOffset;
-          let elapsed = Math.floor((now - data.shotStart) / 1000);
+          let elapsed = (now - data.shotStart) / 1000;
 
           let remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
+  
+          // bulatkan ke bawah biar gak nambah 1 detik
+          remaining = Math.floor(remaining);
 
           save({
-           shot: remaining,
-           shotStart: null,
-           shotDuration: remaining
+            shot: remaining,
+            shotStart: null,
+            shotDuration: remaining
         });
       }
 
