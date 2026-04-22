@@ -134,7 +134,7 @@
         if (!data.shotStart) return;
 
         const now = Date.now() + serverOffset;
-        const elapsed = Math.floor((now - data.shotStart) / 1000);
+        const elapsed = Math.ceil((now - data.shotStart) / 1000);
 
         const remaining = (data.shotDuration || 24) - elapsed;
 
@@ -251,15 +251,18 @@
       function pauseShot() {
         if (!data.shotStart) return;
 
-        const now = Date.now() + serverOffset;
+        let now = Date.now() + serverOffset;
+        let elapsed = (now - data.shotStart) / 1000;
 
-        const elapsed = (now - data.shotStart) / 1000;
-        const remaining = Math.max(0, data.shotDuration - Math.floor(elapsed));
+        let remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
+
+        // ⬇️ INI POSISINYA DI SINI
+        remaining = Math.ceil(remaining);
 
         save({
+          shot: remaining,
           shotStart: null,
-          shotDuration: remaining,
-          shot: remaining
+          shotDuration: remaining
         });
       }
       
