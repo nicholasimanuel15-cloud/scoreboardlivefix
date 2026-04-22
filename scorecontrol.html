@@ -60,7 +60,7 @@
 
       .big-btn {
         background: #ff3b30;
-        margin-top: 18px; /* 🔥 jarak aman */
+        margin-top: 18px;
         opacity: 0.95;
       }
 
@@ -69,7 +69,17 @@
       }
 
       .reset-row {
-        margin-top: 15px; /* 🔥 jarak tambahan dari tombol lain */
+        margin-top: 20px;
+      }
+
+      /* 🔥 KHUSUS SEMUA TOMBOL RESET */
+      .reset-btn {
+        background: #ff3b30;
+        color: white;
+      }
+
+      .reset-btn:hover {
+        background: #ff5c50;
       }
     </style>
   </head>
@@ -321,7 +331,7 @@
       <h3>QUARTER</h3>
       <div class="row">
         <button onclick="nextQuarter()">NEXT</button>
-        <button onclick="resetQuarter()">RESET</button>
+        <button class="reset-btn" onclick="resetQuarter()">RESET</button>
       </div>
     </div>
 
@@ -351,7 +361,7 @@
 
       <!-- 🔥 dipisah & dikasih jarak -->
       <div class="row reset-row">
-        <button class="big-btn" onclick="resetScore()">RESET SCORE</button>
+        <button class="big-btn reset-btn" onclick="resetScore()">RESET SCORE</button>
       </div>
     </div>
 
@@ -370,7 +380,7 @@
 
       <!-- 🔥 dipisah & dikasih jarak -->
       <div class="row reset-row">
-        <button class="big-btn" onclick="resetFoul()">RESET FOUL</button>
+        <button class="big-btn reset-btn" onclick="resetFoul()">RESET FOUL</button>
       </div>
     </div>
 
@@ -385,7 +395,7 @@
       <div class="row">
         <button onclick="startGame()">START</button>
         <button onclick="pauseGame()">PAUSE</button>
-        <button onclick="resetTimer()">RESET</button>
+        <button class="reset-btn" onclick="resetTimer()">RESET</button>
       </div>
     </div>
 
@@ -395,7 +405,7 @@
       <div class="row">
         <button onclick="startShot()">START</button>
         <button onclick="pauseShot()">PAUSE</button>
-        <button onclick="resetShot()">RESET</button>
+        <button class="reset-btn" onclick="resetShot()">RESET</button>
         <button onclick="toggleShot()">ON/OFF</button>
       </div>
     </div>
