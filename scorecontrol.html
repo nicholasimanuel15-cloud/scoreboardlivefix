@@ -250,13 +250,26 @@
       }
 
       function toggleShot() {
-        let on = !data.shotOn;
+      let on = !data.shotOn;
+
+      if (on) {
+    // 🔥 hanya aktifkan, jangan start
         save({
-          shotOn:on,
-          shotStart:on ? Date.now()+serverOffset : null,
-          shotDuration:24
+            shotOn: true,
+            shot: data.shot || 24,
+            shotStart: null,
+            shotDuration: data.shot || 24
+        });
+      } else {
+        // 🔥 matikan sekalian reset
+        save({
+          shotOn: false,
+          shot: 24,
+          shotStart: null,
+          shotDuration: 24
         });
       }
+    }
     </script>
 
     <div class="container">
