@@ -116,14 +116,18 @@
         const remaining = duration - elapsed;
 
         if (remaining <= 0) {
-          // 🔥 reset ke 24 & langsung jalan lagi
-          save({
-            shot: 24,
-            shotStart: now,
-            shotDuration: 24
+        save({
+          shot: 24,
+          shotStart: now,
+          shotDuration: 24
         });
       }
     }
+
+      // 🔥 TARUH DI PALING BAWAH SCRIPT
+        setInterval(() => {
+        handleShotEnd();
+      }, 300);
 
       function save(obj) {
         db.ref("scoreboard").update(obj);
