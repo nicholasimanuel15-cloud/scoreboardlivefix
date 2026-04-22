@@ -39,6 +39,11 @@
         margin-top: 8px;
       }
 
+      /* 🔥 TARUH DI SINI */
+      .timer-gap {
+        margin-top: 12px;
+      }
+
       button {
         padding: 8px 12px;
         border: none;
@@ -238,10 +243,10 @@
         db.ref("scoreboard").once("value").then(snap => {
         let d = snap.val() || {};
 
-        save({
-          q: Math.min(4, (d.q || 1) + 1),
-          time: d.defaultTime || 600,  // 🔥 balik ke waktu awal
-          gameStart: null
+          save({
+            q: Math.min(4, (d.q || 1) + 1),
+            time: d.defaultTime || 600,  // 🔥 balik ke waktu awal
+            gameStart: null
           });
         });
       }
@@ -414,7 +419,7 @@
         <button onclick="setTime()">SET</button>
       </div>
 
-      <div class="row">
+      <div class="row timer-gap">
         <button class="start-btn" onclick="startGame()">START</button>
         <button onclick="pauseGame()">PAUSE</button>
         <button class="reset-btn" onclick="resetTimer()">RESET</button>
