@@ -89,10 +89,15 @@
         height: 60px;
         object-fit: contain;
 
-        background: white;              /* 🔥 biar logo transparan tetap kelihatan */
-        padding: 4px;                  /* jarak logo ke frame */
-        border-radius: 10px;           /* sudut agak rounded */
-        border: 2px solid rgba(255,255,255,0.8);
+        background: #111; /* 🔥 background gelap */
+        padding: 6px;
+
+        border-radius: 50%; /* 🔥 bulat */
+        border: 3px solid white; /* 🔥 ring putih khas NBA */
+
+        box-shadow:
+        0 0 6px rgba(0,0,0,0.6),   /* outer shadow */
+        inset 0 0 6px rgba(255,255,255,0.2); /* inner glow */
       }
 
       .teamTop {
