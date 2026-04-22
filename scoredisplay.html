@@ -254,7 +254,6 @@
       db.ref("scoreboard").on("value", (snapshot) => {
         currentData = snapshot.val() || {};
 
-         // 🔥 UPDATE FOUL COLOR DI SINI
         document.querySelector(".teamA .foulTeam").style.color =
           currentData.textColorA || "#ffffff";
 
