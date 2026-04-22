@@ -100,21 +100,26 @@
           // kalau nanti dipakai di display scoreboard
           window.teamAColor = aColor;
           window.teamBColor = bColor;
+
+          // 🔥 WAJIB ADA
+          handleShotEnd();
       });
 
       function handleShotEnd() {
         if (!data.shotStart) return;
 
-        let now = Date.now() + serverOffset;
-        let elapsed = Math.floor((now - data.shotStart) / 1000);
+        const now = Date.now() + serverOffset;
 
-        let remaining = (data.shotDuration || 24) - elapsed;
+        const elapsed = Math.floor((now - data.shotStart) / 1000);
+        const duration = data.shotDuration || 24;
+
+        const remaining = duration - elapsed;
 
         if (remaining <= 0) {
-        // 🔥 reset dan langsung jalan lagi
+          // 🔥 reset ke 24 & langsung jalan lagi
           save({
             shot: 24,
-            shotStart: Date.now() + serverOffset,
+            shotStart: now,
             shotDuration: 24
         });
       }
