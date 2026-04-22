@@ -134,20 +134,18 @@
         if (!data.shotStart) return;
 
         const now = Date.now() + serverOffset;
-
         const elapsed = Math.floor((now - data.shotStart) / 1000);
-        const duration = data.shotDuration || 24;
 
-        const remaining = duration - elapsed;
+        const remaining = (data.shotDuration || 24) - elapsed;
 
         if (remaining <= 0) {
-        save({
+          save({
           shot: 24,
-          shotStart: now + 1000,
+          shotStart: null,
           shotDuration: 24
         });
+        }
       }
-    }
 
       // 🔥 TARUH DI PALING BAWAH SCRIPT
         setInterval(() => {
@@ -241,37 +239,36 @@
       function startShot() {
         if (!data.shotOn) return;
 
-          let duration = data.shot || data.shotDuration || 24;
+        const now = Date.now() + serverOffset;
+        const remaining = data.shot ?? data.shotDuration ?? 24;
 
-        // kalau sudah habis → reset ke 24
-        if (duration <= 0) duration = 24;
-
-          save({
-            shotStart: Date.now() + serverOffset,
-            shotDuration: duration
+        save({
+          shotStart: now,
+          shotDuration: remaining
         });
       }
 
       function pauseShot() {
         if (!data.shotStart) return;
 
-          let now = Date.now() + serverOffset;
-          let elapsed = (now - data.shotStart) / 1000;
+        const now = Date.now() + serverOffset;
 
-          let remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
-  
-          // bulatkan ke bawah biar gak nambah 1 detik
-          remaining = Math.floor(remaining);
+        const elapsed = (now - data.shotStart) / 1000;
+        const remaining = Math.max(0, data.shotDuration - Math.floor(elapsed));
 
-          save({
-            shot: remaining,
-            shotStart: null,
-            shotDuration: remaining
+        save({
+          shotStart: null,
+          shotDuration: remaining,
+          shot: remaining
         });
       }
-
+      
       function resetShot() {
-        save({ shot:24, shotStart:null });
+        save({
+        shot: 24,
+        shotStart: null,
+        shotDuration: 24
+        });
       }
 
       function toggleShot() {
