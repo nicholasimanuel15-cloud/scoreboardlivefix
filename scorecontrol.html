@@ -133,26 +133,29 @@
       function handleShotEnd() {
         if (!data.shotStart) return;
 
-        const now = Date.now() + serverOffset;
+          const now = Date.now() + serverOffset;
 
-        const elapsed = Math.floor((now - data.shotStart) / 1000);
-        const duration = data.shotDuration || 24;
+          const elapsed = Math.floor((now - data.shotStart) / 1000);
+          const duration = data.shotDuration || 24;
 
-        const remaining = duration - elapsed;
+          const remaining = duration - elapsed;
 
         if (remaining <= 0) {
-        save({
-          shot: 24,
-          shotStart: now + 1000,
-          shotDuration: 24
-        });
+        // 🔥 reset ulang ke 24 dan mulai timer baru
+          save({
+            shot: 24,
+            shotStart: now,
+            shotDuration: 24
+          });
+        } else {
+        // 🔥 update angka tiap tick biar tampil 24,23,22...
+          save({
+            shot: remaining
+          });
+        }
       }
-    }
 
-      // 🔥 TARUH DI PALING BAWAH SCRIPT
-        setInterval(() => {
-        handleShotEnd();
-      }, 300);
+      setInterval(handleShotEnd, 1000);
 
       function save(obj) {
         db.ref("scoreboard").update(obj);
