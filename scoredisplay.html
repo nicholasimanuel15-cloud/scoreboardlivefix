@@ -320,15 +320,21 @@
 
         if (currentData.shotStart && currentData.shotOn) {
           const now = Date.now();
-          const elapsed = Math.floor((now - currentData.shotStart) / 1000);
+
+          const elapsed = (now - currentData.shotStart) / 1000;
+
           const remaining = Math.max(
             0,
-            (currentData.shotDuration || 24) - elapsed,
+            (currentData.shotDuration || 24) - elapsed
           );
 
-          shotclock.innerText = remaining;
+          // 🔥 INI KUNCINYA
+          shotclock.innerText = Math.ceil(remaining);
+
           shotclock.style.display = "flex";
-        } else {
+        }
+        
+        else {
           shotclock.innerText = currentData.shot || 24;
           shotclock.style.display = currentData.shotOn ? "flex" : "none";
         }
