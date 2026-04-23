@@ -328,9 +328,8 @@
             (currentData.shotDuration || 24) - elapsed
           );
 
-          // 🔥 INI KUNCINYA
+          // 🔥 WAJIB CEIL
           shotclock.innerText = Math.ceil(remaining);
-
           shotclock.style.display = "flex";
         }
         
