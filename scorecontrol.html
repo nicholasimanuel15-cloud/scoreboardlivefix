@@ -187,7 +187,7 @@
         if (remaining <= 0) {
           save({
             shot: 24,
-            shotStart: now + 1000, // 🔥 INI KUNCI (buffer 1 detik)
+            shotStart: now + 50, // 🔥 cukup 50ms (bukan 1000)
             shotDuration: 24
           });
         }
@@ -311,7 +311,7 @@
         if (duration <= 0) duration = 24;
 
         save({
-          shotStart: Date.now() + serverOffset + 1000, // 🔥 WAJIB ADA
+          shotStart: Date.now() + serverOffset + 50, // 🔥 kecil aja
           shotDuration: duration
         });
       }
