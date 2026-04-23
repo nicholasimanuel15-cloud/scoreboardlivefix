@@ -213,15 +213,27 @@
 
       function startGame() {
         const now = Date.now() + serverOffset;
-        save({ gameStart: now, gameDuration: data.time || 0 });
+
+        save({
+          gameStart: now + 50, // 🔥 delay kecil biar stabil
+          gameDuration: data.time || 0
+        });
       }
 
       function pauseGame() {
         if (!data.gameStart) return;
-        const now = Date.now() + serverOffset;
-        let elapsed = Math.ceil((now - data.gameStart)/1000);
-        let remaining = Math.max(0,(data.gameDuration||0)-elapsed);
-        save({ time: remaining, gameStart: null });
+
+          const now = Date.now() + serverOffset;
+
+          let elapsed = (now - data.gameStart) / 1000;
+          let remaining = Math.max(0, (data.gameDuration || 0) - elapsed);
+
+          remaining = Math.floor(remaining);
+
+        save({
+           time: remaining,
+           gameStart: null
+        });
       }
 
       function resetTimer() {
@@ -230,7 +242,11 @@
 
       /* QUARTER */
       function nextQuarter() {
-        save({ q: Math.min(4,(data.q||1)+1), gameStart:null });
+        save({
+          q: Math.min(4, (data.q || 1) + 1),
+          gameStart: null,
+          time: data.defaultTime || 600 // 🔥 reset ke waktu awal
+        });
       }
 
       function resetQuarter() {
