@@ -90,6 +90,16 @@
       .start-btn:hover {
         background: #4cd964;
       }
+
+      .pause-btn {
+        background: #ffcc00; /* kuning */
+        color: black;
+      }
+
+      .pause-btn:hover {
+        background: #ffd633;
+      }
+      
     </style>
   </head>
 
@@ -424,7 +434,7 @@
 
       <div class="row">
         <button class="start-btn" onclick="startGame()">START</button>
-        <button onclick="pauseGame()">PAUSE</button>
+        <button class="pause-btn" onclick="pauseGame()">PAUSE</button>
         <button class="reset-btn" onclick="resetTimer()">RESET</button>
       </div>
     </div>
@@ -434,7 +444,7 @@
       <h3>SHOT CLOCK</h3>
       <div class="row">
         <button class="start-btn" onclick="startShot()">START</button>
-        <button onclick="pauseShot()">PAUSE</button>
+        <button class="pause-btn" onclick="pauseShot()">PAUSE</button>
         <button class="reset-btn" onclick="resetShot()">RESET</button>
         <button onclick="toggleShot()">ON/OFF</button>
       </div>
