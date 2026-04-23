@@ -39,24 +39,22 @@
       /* 🔥 MATCH TITLE */
       .matchTitle {
         background: #2f2f2f;
-        color: #fff;
+        color: #fff; /* abu-abu */
 
         display: flex;
         align-items: center;
         justify-content: center;
 
-        padding: 12px 18px;      /* 🔥 sedikit lebih besar */
-        font-size: 18px;         /* 🔥 BESARKAN */
+        padding: 10px 16px;
+        font-size: 13px;
         font-weight: bold;
-        letter-spacing: 1.5px;
+        letter-spacing: 1px;
 
-        border-right: 2px solid rgba(255,255,255,0.1);
+        border-right: 2px solid rgba(255, 255, 255, 0.1);
 
         text-align: center;
         line-height: 1.1;
-        min-width: 130px;        /* 🔥 biar nggak sempit */
-
-        text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+        min-width: 110px;
       }
 
       .team {
@@ -182,49 +180,18 @@
       }
 
       .shotclock {
-        background: linear-gradient(180deg, #FFD700, #c9a400);
-        color: #000;
+        background: #ff3b30;
+        color: white;
 
-        font-size: 25px;        /* 🔥 samakan feel dengan title */
+        font-size: 30px;
         font-weight: bold;
 
-        min-width: 110px;       /* 🔥 biar proporsional */
-        padding: 12px 18px;     /* 🔥 SAMA dengan matchTitle */
+        min-width: 55px;
+        padding: 10px;
 
         display: flex;
         align-items: center;
         justify-content: center;
-
-        text-shadow: 0 1px 2px rgba(255,255,255,0.3);
-      }
-      /* 🔥 NBA STYLE LOGO */
-      .logoWrap {
-        width: 50px;
-        height: 50px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 50%;
-
-        /* 🔥 background depth */
-        background: radial-gradient(circle at 30% 30%, #2a2a2a, #000);
-
-        /* 🔥 ring putih khas NBA */
-        border: 3px solid white;
-
-        /* 🔥 shadow + inner glow */
-        box-shadow:
-        0 6px 14px rgba(0,0,0,0.8),
-        inset 0 0 10px rgba(255,255,255,0.2);
-      }
-
-        /* 🔥 ukuran logo di dalam */
-      .logoWrap img {
-        width: 75%;
-        height: 75%;
-        object-fit: contain;
       }
     </style>
   </head>
@@ -237,9 +204,7 @@
       <!-- 🔴 TEAM A -->
       <div class="team teamA">
         <div class="teamTop">
-          <div class="logoWrap">
-              <img id="logoA" />
-          </div>
+          <img id="logoA" />
           <span id="teamAName">TEAM A</span>
         </div>
         <div class="foulTeam">FOUL <span id="foulA">0</span></div>
@@ -261,9 +226,7 @@
       <div class="team teamB">
         <div class="teamTop">
           <span id="teamBName">TEAM B</span>
-          <div class="logoWrap">
-            <img id="logoB" />
-          </div>
+          <img id="logoB" />
         </div>
         <div class="foulTeam">FOUL <span id="foulB">0</span></div>
       </div>
@@ -352,24 +315,20 @@
           timer.innerText = formatTime(currentData.time || 0);
         }
 
-        if (currentData.shotOn === false) {
-          shotclock.style.display = "none";
-        } else {
-          shotclock.style.display = "flex";
-
-        if (currentData.shotStart) {
+        if (currentData.shotStart && currentData.shotOn) {
           const now = Date.now();
-
           const elapsed = Math.floor((now - currentData.shotStart) / 1000);
-          const duration = currentData.shotDuration || 24;
+          const remaining = Math.max(
+            0,
+            (currentData.shotDuration || 24) - elapsed,
+          );
 
-          const remaining = Math.max(0, duration - elapsed);
-
-          shotclock.innerText = remaining <= 0 ? 24 : remaining;
+          shotclock.innerText = remaining;
+          shotclock.style.display = "flex";
         } else {
           shotclock.innerText = currentData.shot || 24;
+          shotclock.style.display = currentData.shotOn ? "flex" : "none";
         }
-      }
       }, 200);
     </script>
   </body>
