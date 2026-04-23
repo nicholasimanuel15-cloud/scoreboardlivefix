@@ -352,20 +352,24 @@
           timer.innerText = formatTime(currentData.time || 0);
         }
 
-        if (currentData.shotStart && currentData.shotOn) {
-          const now = Date.now();
-          const elapsed = Math.floor((now - currentData.shotStart) / 1000);
-          const remaining = Math.max(
-            0,
-            (currentData.shotDuration || 24) - elapsed,
-          );
-
-          shotclock.innerText = remaining;
+        if (currentData.shotOn === false) {
+          shotclock.style.display = "none";
+        } else {
           shotclock.style.display = "flex";
+
+        if (currentData.shotStart) {
+          const now = Date.now();
+
+          const elapsed = Math.floor((now - currentData.shotStart) / 1000);
+          const duration = currentData.shotDuration || 24;
+
+          const remaining = Math.max(0, duration - elapsed);
+
+          shotclock.innerText = remaining <= 0 ? 24 : remaining;
         } else {
           shotclock.innerText = currentData.shot || 24;
-          shotclock.style.display = currentData.shotOn ? "flex" : "none";
         }
+      }
       }, 200);
     </script>
   </body>
