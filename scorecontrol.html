@@ -177,17 +177,17 @@
       function handleShotEnd() {
         if (!data.shotStart) return;
 
-          const now = Date.now() + serverOffset;
+        const now = Date.now() + serverOffset;
 
-          const elapsed = Math.floor((now - data.shotStart) / 1000);
-          const duration = data.shotDuration || 24;
+        const elapsed = Math.floor((now - data.shotStart) / 1000);
+        const duration = data.shotDuration || 24;
 
-          const remaining = duration - elapsed;
+        const remaining = duration - elapsed;
 
         if (remaining <= 0) {
           save({
             shot: 24,
-            shotStart: now,   // 🔥 TANPA +1000
+            shotStart: now + 1000, // 🔥 INI KUNCI (buffer 1 detik)
             shotDuration: 24
           });
         }
@@ -310,11 +310,11 @@
 
         if (duration <= 0) duration = 24;
 
-          save({
-            shotStart: Date.now() + serverOffset,
-            shotDuration: duration
-          });
-        }
+        save({
+          shotStart: Date.now() + serverOffset + 1000, // 🔥 WAJIB ADA
+          shotDuration: duration
+        });
+      }
 
       function pauseShot() {
         if (!data.shotStart) return;
