@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scoreboard Control</title>
 
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -19,6 +20,13 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 25px;
+      }
+
+      /* 🔥 MODE HP */
+      @media (max-width: 768px) {
+        .container {
+          grid-template-columns: 1fr; /* jadi 1 kolom */
+        }
       }
 
       .section {
@@ -99,6 +107,32 @@
       .pause-btn:hover {
         background: #ffd633;
       }
+
+      @media (max-width: 768px) {
+        button {
+          padding: 12px 14px;
+          font-size: 14px;
+        }
+
+      input {
+        padding: 10px;
+        font-size: 14px;
+      }
+
+      h3 {
+        font-size: 16px;
+      }
+        
+      /* 🔥 TAMBAH DI SINI */
+      .row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .row button {
+        width: 100%;
+      }
+    }
       
     </style>
   </head>
