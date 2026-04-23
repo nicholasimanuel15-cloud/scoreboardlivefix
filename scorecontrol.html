@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Scoreboard Control</title>
 
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -114,36 +114,35 @@
           font-size: 14px;
         }
 
-      input {
-        padding: 10px;
-        font-size: 14px;
-      }
+        input {
+          padding: 10px;
+          font-size: 14px;
+        }
 
-      h3 {
-        font-size: 16px;
-      }
-        
-      /* 🔥 TAMBAH DI SINI */
-      .row {
-        flex-direction: column;
-        align-items: stretch;
-      }
+        h3 {
+          font-size: 16px;
+        }
 
-      .row button {
-        width: 100%;
+        /* 🔥 TAMBAH DI SINI */
+        .row {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .row button {
+          width: 100%;
+        }
       }
-    }
-      
     </style>
   </head>
 
   <body>
-
     <script>
       const firebaseConfig = {
         apiKey: "AIzaSy...",
         authDomain: "scoreboard-basket-ea929.firebaseapp.com",
-        databaseURL: "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
+        databaseURL:
+          "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
         projectId: "scoreboard-basket-ea929",
         storageBucket: "scoreboard-basket-ea929.firebasestorage.app",
         messagingSenderId: "248063752824",
@@ -154,24 +153,27 @@
       const db = firebase.database();
 
       let serverOffset = 0;
-      firebase.database().ref(".info/serverTimeOffset").on("value", snap => {
-        serverOffset = snap.val() || 0;
-      });
+      firebase
+        .database()
+        .ref(".info/serverTimeOffset")
+        .on("value", (snap) => {
+          serverOffset = snap.val() || 0;
+        });
 
       let data = {};
-      db.ref("scoreboard").on("value", snap => {
+      db.ref("scoreboard").on("value", (snap) => {
         if (snap.exists()) data = snap.val();
 
-          // warna text team
-          const aColor = data.textColorA || "#ffffff";
-          const bColor = data.textColorB || "#ffffff";
+        // warna text team
+        const aColor = data.textColorA || "#ffffff";
+        const bColor = data.textColorB || "#ffffff";
 
-          // kalau nanti dipakai di display scoreboard
-          window.teamAColor = aColor;
-          window.teamBColor = bColor;
+        // kalau nanti dipakai di display scoreboard
+        window.teamAColor = aColor;
+        window.teamBColor = bColor;
 
-          // 🔥 WAJIB ADA
-          handleShotEnd();
+        // 🔥 WAJIB ADA
+        handleShotEnd();
       });
 
       function handleShotEnd() {
@@ -188,13 +190,13 @@
           save({
             shot: 24,
             shotStart: now + 50, // 🔥 cukup 50ms (bukan 1000)
-            shotDuration: 24
+            shotDuration: 24,
           });
         }
       }
 
       // 🔥 TARUH DI PALING BAWAH SCRIPT
-        setInterval(() => {
+      setInterval(() => {
         handleShotEnd();
       }, 300);
 
@@ -251,7 +253,8 @@
 
       /* TIMER */
       function setTime() {
-        let total = (parseInt(min.value)||0)*60 + (parseInt(sec.value)||0);
+        let total =
+          (parseInt(min.value) || 0) * 60 + (parseInt(sec.value) || 0);
         save({ time: total, defaultTime: total, gameStart: null });
       }
 
@@ -260,7 +263,7 @@
 
         save({
           gameStart: now + 150, // 🔥 buffer dikit biar gak kepotong
-          gameDuration: data.time || 0
+          gameDuration: data.time || 0,
         });
       }
 
@@ -276,12 +279,12 @@
         elapsed += 0.15;
 
         let remaining = Math.max(0, (data.gameDuration || 0) - elapsed);
-        
+
         remaining = Math.floor(remaining);
 
         save({
           time: remaining,
-          gameStart: null
+          gameStart: null,
         });
       }
 
@@ -294,12 +297,12 @@
         save({
           q: Math.min(4, (data.q || 1) + 1),
           gameStart: null,
-          time: data.defaultTime || 600 // 🔥 reset ke waktu awal
+          time: data.defaultTime || 600, // 🔥 reset ke waktu awal
         });
       }
 
       function resetQuarter() {
-        save({ q:1, gameStart:null });
+        save({ q: 1, gameStart: null });
       }
 
       /* SHOT CLOCK */
@@ -312,7 +315,7 @@
 
         save({
           shotStart: Date.now() + serverOffset + 50, // 🔥 kecil aja
-          shotDuration: duration
+          shotDuration: duration,
         });
       }
 
@@ -333,162 +336,162 @@
         save({
           shot: remaining,
           shotStart: null,
-          shotDuration: remaining
+          shotDuration: remaining,
         });
       }
 
       function resetShot() {
-        save({ shot:24, shotStart:null });
+        save({ shot: 24, shotStart: null });
       }
 
       function toggleShot() {
-      let on = !data.shotOn;
+        let on = !data.shotOn;
 
-      if (on) {
-    // 🔥 hanya aktifkan, jangan start
-        save({
+        if (on) {
+          // 🔥 hanya aktifkan, jangan start
+          save({
             shotOn: true,
             shot: data.shot || 24,
             shotStart: null,
-            shotDuration: data.shot || 24
-        });
-      } else {
-        // 🔥 matikan sekalian reset
-        save({
-          shotOn: false,
-          shot: 24,
-          shotStart: null,
-          shotDuration: 24
-        });
+            shotDuration: data.shot || 24,
+          });
+        } else {
+          // 🔥 matikan sekalian reset
+          save({
+            shotOn: false,
+            shot: 24,
+            shotStart: null,
+            shotDuration: 24,
+          });
+        }
       }
-    }
     </script>
 
     <div class="container">
+      <!-- LEFT -->
+      <div>
+        <div class="section">
+          <h3>JUDUL MATCH</h3>
+          <input
+            placeholder="GROUP PHASE"
+            oninput="setMatchTitle(this.value)"
+          />
+        </div>
 
-  <!-- LEFT -->
-  <div>
+        <div class="section">
+          <h3>NAMA TEAM</h3>
+          <div class="row">
+            <input placeholder="Team A" oninput="setName('A', this.value)" />
+            <input type="color" onchange="setTextColor('A', this.value)" />
+          </div>
+          <div class="row">
+            <input placeholder="Team B" oninput="setName('B', this.value)" />
+            <input type="color" onchange="setTextColor('B', this.value)" />
+          </div>
+        </div>
 
-    <div class="section">
-      <h3>JUDUL MATCH</h3>
-      <input placeholder="GROUP PHASE" oninput="setMatchTitle(this.value)" />
+        <div class="section">
+          <h3>LOGO TEAM</h3>
+          <div class="row">
+            <input type="file" onchange="setLogo(event, 'A')" />
+            <input type="file" onchange="setLogo(event, 'B')" />
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>WARNA TEAM</h3>
+          <div class="row">
+            <input type="color" onchange="setColor('A', this.value)" />
+            <input type="color" onchange="setColor('B', this.value)" />
+          </div>
+        </div>
+
+        <!-- 🔥 QUARTER DIPINDAH KE SINI -->
+        <div class="section">
+          <h3>QUARTER</h3>
+          <div class="row">
+            <button onclick="nextQuarter()">NEXT</button>
+            <button class="reset-btn" onclick="resetQuarter()">RESET</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+        <div class="section">
+          <h3>SKOR</h3>
+
+          <div class="row">
+            Team A:
+            <button onclick="addScore('A', -1)">minus 1</button>
+            <button onclick="addScore('A', 1)">+1</button>
+            <button onclick="addScore('A', 2)">+2</button>
+            <button onclick="addScore('A', 3)">+3</button>
+          </div>
+
+          <div class="row">
+            Team B:
+            <button onclick="addScore('B', -1)">minus 1</button>
+            <button onclick="addScore('B', 1)">+1</button>
+            <button onclick="addScore('B', 2)">+2</button>
+            <button onclick="addScore('B', 3)">+3</button>
+          </div>
+
+          <!-- 🔥 dipisah & dikasih jarak -->
+          <div class="row reset-row">
+            <button class="big-btn reset-btn" onclick="resetScore()">
+              RESET SCORE
+            </button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>FOUL</h3>
+
+          <div class="row">
+            Team A:
+            <button onclick="addFoul('A')">plus</button>
+            <button onclick="minusFoul('A')">minus</button>
+
+            Team B:
+            <button onclick="addFoul('B')">plus</button>
+            <button onclick="minusFoul('B')">minus</button>
+          </div>
+
+          <!-- 🔥 dipisah & dikasih jarak -->
+          <div class="row reset-row">
+            <button class="big-btn reset-btn" onclick="resetFoul()">
+              RESET FOUL
+            </button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>TIMER</h3>
+          <div class="row">
+            <input id="min" placeholder="Min" />
+            <input id="sec" placeholder="Sec" />
+            <button onclick="setTime()">SET</button>
+          </div>
+
+          <div class="row">
+            <button class="start-btn" onclick="startGame()">START</button>
+            <button class="pause-btn" onclick="pauseGame()">PAUSE</button>
+            <button class="reset-btn" onclick="resetTimer()">RESET</button>
+          </div>
+        </div>
+
+        <!-- 🔥 SHOT CLOCK TETAP DI KANAN -->
+        <div class="section">
+          <h3>SHOT CLOCK</h3>
+          <div class="row">
+            <button class="start-btn" onclick="startShot()">START</button>
+            <button class="pause-btn" onclick="pauseShot()">PAUSE</button>
+            <button class="reset-btn" onclick="resetShot()">RESET</button>
+            <button onclick="toggleShot()">ON/OFF</button>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="section">
-      <h3>NAMA TEAM</h3>
-      <div class="row">
-        <input placeholder="Team A" oninput="setName('A', this.value)" />
-        <input type="color" onchange="setTextColor('A', this.value)" />
-      </div>
-      <div class="row">
-        <input placeholder="Team B" oninput="setName('B', this.value)" />
-        <input type="color" onchange="setTextColor('B', this.value)" />
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>LOGO TEAM</h3>
-      <div class="row">
-        <input type="file" onchange="setLogo(event,'A')" />
-        <input type="file" onchange="setLogo(event,'B')" />
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>WARNA TEAM</h3>
-      <div class="row">
-        <input type="color" onchange="setColor('A', this.value)" />
-        <input type="color" onchange="setColor('B', this.value)" />
-      </div>
-    </div>
-
-    <!-- 🔥 QUARTER DIPINDAH KE SINI -->
-    <div class="section">
-      <h3>QUARTER</h3>
-      <div class="row">
-        <button onclick="nextQuarter()">NEXT</button>
-        <button class="reset-btn" onclick="resetQuarter()">RESET</button>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- RIGHT -->
-  <div>
-
-    <div class="section">
-      <h3>SKOR</h3>
-
-      <div class="row">
-        Team A:
-        <button onclick="addScore('A',-1)">minus 1</button>
-        <button onclick="addScore('A',1)">+1</button>
-        <button onclick="addScore('A',2)">+2</button>
-        <button onclick="addScore('A',3)">+3</button>
-      </div>
-
-      <div class="row">
-        Team B:
-        <button onclick="addScore('B',-1)">minus 1</button>
-        <button onclick="addScore('B',1)">+1</button>
-        <button onclick="addScore('B',2)">+2</button>
-        <button onclick="addScore('B',3)">+3</button>
-      </div>
-
-      <!-- 🔥 dipisah & dikasih jarak -->
-      <div class="row reset-row">
-        <button class="big-btn reset-btn" onclick="resetScore()">RESET SCORE</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>FOUL</h3>
-
-      <div class="row">
-        Team A:
-        <button onclick="addFoul('A')">plus</button>
-        <button onclick="minusFoul('A')">minus</button>
-
-        Team B:
-        <button onclick="addFoul('B')">plus</button>
-        <button onclick="minusFoul('B')">minus</button>
-      </div>
-
-      <!-- 🔥 dipisah & dikasih jarak -->
-      <div class="row reset-row">
-        <button class="big-btn reset-btn" onclick="resetFoul()">RESET FOUL</button>
-      </div>
-    </div>
-
-    <div class="section">
-      <h3>TIMER</h3>
-      <div class="row">
-        <input id="min" placeholder="Min" />
-        <input id="sec" placeholder="Sec" />
-        <button onclick="setTime()">SET</button>
-      </div>
-
-      <div class="row">
-        <button class="start-btn" onclick="startGame()">START</button>
-        <button class="pause-btn" onclick="pauseGame()">PAUSE</button>
-        <button class="reset-btn" onclick="resetTimer()">RESET</button>
-      </div>
-    </div>
-
-    <!-- 🔥 SHOT CLOCK TETAP DI KANAN -->
-    <div class="section">
-      <h3>SHOT CLOCK</h3>
-      <div class="row">
-        <button class="start-btn" onclick="startShot()">START</button>
-        <button class="pause-btn" onclick="pauseShot()">PAUSE</button>
-        <button class="reset-btn" onclick="resetShot()">RESET</button>
-        <button onclick="toggleShot()">ON/OFF</button>
-      </div>
-    </div>
-
-  </div>
-
-</div>
-
   </body>
 </html>
