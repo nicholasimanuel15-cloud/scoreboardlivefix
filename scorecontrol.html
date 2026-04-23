@@ -177,17 +177,17 @@
       function handleShotEnd() {
         if (!data.shotStart) return;
 
-        const now = Date.now() + serverOffset;
+          const now = Date.now() + serverOffset;
 
-        const elapsed = Math.floor((now - data.shotStart) / 1000);
-        const duration = data.shotDuration || 24;
+          const elapsed = Math.floor((now - data.shotStart) / 1000);
+          const duration = data.shotDuration || 24;
 
-        const remaining = duration - elapsed;
+          const remaining = duration - elapsed;
 
         if (remaining <= 0) {
           save({
             shot: 24,
-            shotStart: now + 1000, // 🔥 delay 1 detik biar tampil 24 dulu
+            shotStart: now,   // 🔥 TANPA +1000
             shotDuration: 24
           });
         }
@@ -310,27 +310,30 @@
 
         if (duration <= 0) duration = 24;
 
-        save({
-          shotStart: Date.now() + serverOffset + 1000, // 🔥 TAMBAH +1000
-          shotDuration: duration
-        });
-      }
+          save({
+            shotStart: Date.now() + serverOffset,
+            shotDuration: duration
+          });
+        }
 
       function pauseShot() {
         if (!data.shotStart) return;
 
-          let now = Date.now() + serverOffset;
-          let elapsed = (now - data.shotStart) / 1000;
+        let now = Date.now() + serverOffset;
 
-          let remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
-  
-          // bulatkan ke bawah biar gak nambah 1 detik
-          remaining = Math.floor(remaining);
+        let elapsed = (now - data.shotStart) / 1000;
 
-          save({
-            shot: remaining,
-            shotStart: null,
-            shotDuration: remaining
+        // 🔥 kompensasi delay klik (WAJIB)
+        elapsed += 0.15;
+
+        let remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
+
+        remaining = Math.floor(remaining);
+
+        save({
+          shot: remaining,
+          shotStart: null,
+          shotDuration: remaining
         });
       }
 
