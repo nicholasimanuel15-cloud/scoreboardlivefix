@@ -135,26 +135,27 @@
 
           const now = Date.now() + serverOffset;
 
-          const elapsed = Math.floor((now - data.shotStart) / 1000);
           const duration = data.shotDuration || 24;
+          const elapsed = Math.floor((now - data.shotStart) / 1000);
 
-          const remaining = duration - elapsed;
+          let remaining = duration - elapsed;
 
         if (remaining <= 0) {
-        // 🔥 reset ulang ke 24 dan mulai timer baru
-          save({
-            shot: 24,
-            shotStart: now,
-            shotDuration: 24
-          });
-        } else {
-        // 🔥 update angka tiap tick biar tampil 24,23,22...
-          save({
-            shot: remaining
-          });
-        }
+        // reset ke 24 lagi
+        save({
+          shot: 24,
+          shotStart: now,
+          shotDuration: 24
+        });
+        return;
       }
 
+  // 🔥 penting: hanya update angka, jangan ganggu shotStart
+  save({
+    shot: remaining
+  });
+}
+      
       setInterval(handleShotEnd, 1000);
 
       function save(obj) {
@@ -250,7 +251,7 @@
         if (duration <= 0) duration = 24;
 
           save({
-            shotStart: Date.now() + serverOffset,
+            shotStart: Date.now()
             shotDuration: duration
         });
       }
