@@ -223,15 +223,18 @@
       function pauseGame() {
         if (!data.gameStart) return;
 
-          const now = Date.now() + serverOffset;
+        const now = Date.now() + serverOffset;
 
-          let elapsed = (now - data.gameStart) / 1000;
+        // 🔥 hitung dengan presisi + kompensasi delay klik
+        let elapsed = (now - data.gameStart) / 1000;
 
-          // 🔥 tambahin offset kecil biar gak naik 1 detik
-          let remaining = Math.max(0, (data.gameDuration || 0) - elapsed - 0.05);
+        // 🔥 kompensasi delay manusia + jaringan (~150ms)
+        elapsed += 0.15;
 
-        remaining = Math.round(remaining);
+        let remaining = Math.max(0, (data.gameDuration || 0) - elapsed);
         
+        remaining = Math.floor(remaining);
+
         save({
           time: remaining,
           gameStart: null
