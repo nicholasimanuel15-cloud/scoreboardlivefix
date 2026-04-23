@@ -215,7 +215,7 @@
         const now = Date.now() + serverOffset;
 
         save({
-          gameStart: now + 50, // 🔥 delay kecil biar stabil
+          gameStart: now + 150, // 🔥 buffer dikit biar gak kepotong
           gameDuration: data.time || 0
         });
       }
@@ -226,13 +226,15 @@
           const now = Date.now() + serverOffset;
 
           let elapsed = (now - data.gameStart) / 1000;
-          let remaining = Math.max(0, (data.gameDuration || 0) - elapsed);
 
-          remaining = Math.floor(remaining);
+          // 🔥 tambahin offset kecil biar gak naik 1 detik
+          let remaining = Math.max(0, (data.gameDuration || 0) - elapsed - 0.05);
 
+        remaining = Math.round(remaining);
+        
         save({
-           time: remaining,
-           gameStart: null
+          time: remaining,
+          gameStart: null
         });
       }
 
