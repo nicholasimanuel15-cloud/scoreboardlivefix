@@ -133,21 +133,21 @@
       function handleShotEnd() {
         if (!data.shotStart) return;
 
-        const now = Date.now() + serverOffset;
+          const now = Date.now() + serverOffset;
 
-        const elapsed = Math.floor((now - data.shotStart) / 1000);
-        const duration = data.shotDuration || 24;
+          const elapsed = (now - data.shotStart) / 1000;
+          const duration = data.shotDuration || 24;
 
-        const remaining = duration - elapsed;
+          const remaining = duration - elapsed;
 
         if (remaining <= 0) {
-        save({
-          shot: 24,
-          shotStart: now + 1000,
-          shotDuration: 24
-        });
+          save({
+            shot: 24,
+            shotStart: null,
+            shotDuration: 24
+          });
+        }
       }
-    }
 
       // 🔥 TARUH DI PALING BAWAH SCRIPT
         setInterval(() => {
@@ -241,41 +241,49 @@
       function startShot() {
         if (!data.shotOn) return;
 
-          let duration = data.shot || data.shotDuration || 24;
+          const now = Date.now() + serverOffset;
 
-        // kalau sudah habis → reset ke 24
-        if (duration <= 0) duration = 24;
-
+        // kalau belum ada start → mulai dari durasi penuh
+        if (!data.shotStart) {
           save({
-            shotStart: Date.now() + serverOffset,
-            shotDuration: duration
-        });
+            shotStart: now,
+            shotDuration: data.shotDuration || 24
+          });
+        }
       }
 
       function pauseShot() {
         if (!data.shotStart) return;
 
-          let now = Date.now() + serverOffset;
-          let elapsed = (now - data.shotStart) / 1000;
+          const now = Date.now() + serverOffset;
 
-          let remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
-  
-          // bulatkan ke bawah biar gak nambah 1 detik
-          remaining = Math.floor(remaining);
+          const elapsed = (now - data.shotStart) / 1000;
+          const remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
 
           save({
-            shot: remaining,
             shotStart: null,
-            shotDuration: remaining
-        });
+            shot: Math.floor(remaining) // simpan sisa saja
+          });
       }
 
       function resetShot() {
-        save({ shot:24, shotStart:null });
+        save({
+          shot: 24,
+          shotStart: null,
+          shotDuration: 24
+        });
       }
 
       function toggleShot() {
-      let on = !data.shotOn;
+        const on = !data.shotOn;
+
+        save({
+          shotOn: on,
+          shot: data.shot || 24,
+          shotStart: null,
+          shotDuration: data.shot || 24
+        });
+      }
 
       if (on) {
     // 🔥 hanya aktifkan, jangan start
