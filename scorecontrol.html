@@ -277,13 +277,22 @@
       function toggleShot() {
         const on = !data.shotOn;
 
-        save({
-          shotOn: on,
-          shot: data.shot || 24,
+        if (on) {
+          save({
+            shotOn: true,
+            shot: data.shot || 24,
+            shotStart: null,
+            shotDuration: data.shot || 24
+        });
+        } else {
+          save({
+          shotOn: false,
+          shot: 24,
           shotStart: null,
-          shotDuration: data.shot || 24
+          shotDuration: 24
         });
       }
+    }
 
       if (on) {
     // 🔥 hanya aktifkan, jangan start
