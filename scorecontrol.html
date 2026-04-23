@@ -179,18 +179,15 @@
 
         const now = Date.now() + serverOffset;
 
-        const elapsed = (now - data.shotStart) / 1000;
+        const elapsed = Math.floor((now - data.shotStart) / 1000);
         const duration = data.shotDuration || 24;
 
-        let remaining = duration - elapsed;
-
-        // 🔥 pakai ceil supaya tidak turun duluan
-        remaining = Math.ceil(remaining);
+        const remaining = duration - elapsed;
 
         if (remaining <= 0) {
           save({
             shot: 24,
-            shotStart: now,   // 🔥 HAPUS +1000
+            shotStart: now + 1000, // 🔥 delay 1 detik biar tampil 24 dulu
             shotDuration: 24
           });
         }
@@ -309,14 +306,13 @@
       function startShot() {
         if (!data.shotOn) return;
 
-          let duration = data.shot || data.shotDuration || 24;
+        let duration = data.shot || data.shotDuration || 24;
 
-        // kalau sudah habis → reset ke 24
         if (duration <= 0) duration = 24;
 
-          save({
-            shotStart: Date.now() + serverOffset,
-            shotDuration: duration
+        save({
+          shotStart: Date.now() + serverOffset + 1000, // 🔥 TAMBAH +1000
+          shotDuration: duration
         });
       }
 
