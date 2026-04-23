@@ -99,8 +99,7 @@
       const firebaseConfig = {
         apiKey: "AIzaSy...",
         authDomain: "scoreboard-basket-ea929.firebaseapp.com",
-        databaseURL:
-          "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
+        databaseURL: "https://scoreboard-basket-ea929-default-rtdb.asia-southeast1.firebasedatabase.app",
         projectId: "scoreboard-basket-ea929",
         storageBucket: "scoreboard-basket-ea929.firebasestorage.app",
         messagingSenderId: "248063752824",
@@ -134,21 +133,21 @@
       function handleShotEnd() {
         if (!data.shotStart) return;
 
-          const now = Date.now() + serverOffset;
+        const now = Date.now() + serverOffset;
 
-          const elapsed = (now - data.shotStart) / 1000;
-          const duration = data.shotDuration || 24;
+        const elapsed = Math.floor((now - data.shotStart) / 1000);
+        const duration = data.shotDuration || 24;
 
-          const remaining = duration - elapsed;
+        const remaining = duration - elapsed;
 
         if (remaining <= 0) {
-          save({
-            shot: 24,
-            shotStart: null,
-            shotDuration: 24
-          });
-        }
+        save({
+          shot: 24,
+          shotStart: now + 1000,
+          shotDuration: 24
+        });
       }
+    }
 
       // 🔥 TARUH DI PALING BAWAH SCRIPT
         setInterval(() => {
@@ -242,58 +241,41 @@
       function startShot() {
         if (!data.shotOn) return;
 
-          const now = Date.now() + serverOffset;
+          let duration = data.shot || data.shotDuration || 24;
 
-        // kalau belum ada start → mulai dari durasi penuh
-        if (!data.shotStart) {
+        // kalau sudah habis → reset ke 24
+        if (duration <= 0) duration = 24;
+
           save({
-            shotStart: now,
-            shotDuration: data.shotDuration || 24
-          });
-        }
+            shotStart: Date.now() + serverOffset,
+            shotDuration: duration
+        });
       }
 
       function pauseShot() {
         if (!data.shotStart) return;
 
-          const now = Date.now() + serverOffset;
+          let now = Date.now() + serverOffset;
+          let elapsed = (now - data.shotStart) / 1000;
 
-          const elapsed = (now - data.shotStart) / 1000;
-          const remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
+          let remaining = Math.max(0, (data.shotDuration || 24) - elapsed);
+  
+          // bulatkan ke bawah biar gak nambah 1 detik
+          remaining = Math.floor(remaining);
 
           save({
+            shot: remaining,
             shotStart: null,
-            shot: Math.floor(remaining) // simpan sisa saja
-          });
+            shotDuration: remaining
+        });
       }
 
       function resetShot() {
-        save({
-          shot: 24,
-          shotStart: null,
-          shotDuration: 24
-        });
+        save({ shot:24, shotStart:null });
       }
 
       function toggleShot() {
-        const on = !data.shotOn;
-
-        if (on) {
-          save({
-            shotOn: true,
-            shot: data.shot || 24,
-            shotStart: null,
-            shotDuration: data.shot || 24
-        });
-        } else {
-          save({
-          shotOn: false,
-          shot: 24,
-          shotStart: null,
-          shotDuration: 24
-        });
-      }
-    }
+      let on = !data.shotOn;
 
       if (on) {
     // 🔥 hanya aktifkan, jangan start
