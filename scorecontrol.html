@@ -133,30 +133,26 @@
       function handleShotEnd() {
         if (!data.shotStart) return;
 
-          const now = Date.now() + serverOffset;
+        const now = Date.now() + serverOffset;
 
-          const duration = data.shotDuration || 24;
-          const elapsed = Math.floor((now - data.shotStart) / 1000);
+        const elapsed = Math.floor((now - data.shotStart) / 1000);
+        const duration = data.shotDuration || 24;
 
-          let remaining = duration - elapsed;
+        const remaining = duration - elapsed;
 
         if (remaining <= 0) {
-        // reset ke 24 lagi
         save({
           shot: 24,
-          shotStart: now,
+          shotStart: now + 1000,
           shotDuration: 24
         });
-        return;
       }
+    }
 
-  // 🔥 penting: hanya update angka, jangan ganggu shotStart
-  save({
-    shot: remaining
-  });
-}
-      
-      setInterval(handleShotEnd, 1000);
+      // 🔥 TARUH DI PALING BAWAH SCRIPT
+        setInterval(() => {
+        handleShotEnd();
+      }, 300);
 
       function save(obj) {
         db.ref("scoreboard").update(obj);
@@ -251,7 +247,7 @@
         if (duration <= 0) duration = 24;
 
           save({
-            shotStart: Date.now()
+            shotStart: Date.now() + serverOffset,
             shotDuration: duration
         });
       }
