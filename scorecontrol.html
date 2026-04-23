@@ -179,19 +179,22 @@
 
         const now = Date.now() + serverOffset;
 
-        const elapsed = Math.floor((now - data.shotStart) / 1000);
+        const elapsed = (now - data.shotStart) / 1000;
         const duration = data.shotDuration || 24;
 
-        const remaining = duration - elapsed;
+        let remaining = duration - elapsed;
+
+        // 🔥 pakai ceil supaya tidak turun duluan
+        remaining = Math.ceil(remaining);
 
         if (remaining <= 0) {
-        save({
-          shot: 24,
-          shotStart: now + 1000,
-          shotDuration: 24
-        });
+          save({
+            shot: 24,
+            shotStart: now,   // 🔥 HAPUS +1000
+            shotDuration: 24
+          });
+        }
       }
-    }
 
       // 🔥 TARUH DI PALING BAWAH SCRIPT
         setInterval(() => {
