@@ -255,6 +255,11 @@
 
       let currentData = {};
 
+      let serverOffset = 0;
+        firebase.database().ref(".info/serverTimeOffset").on("value", (snap) => {
+        serverOffset = snap.val() || 0;
+      });
+
       function getQuarterLabel(q) {
         if (q <= 4) return "Q" + q;
         if (q === 5) return "OT1";
@@ -314,7 +319,7 @@
 
       setInterval(() => {
         if (currentData.gameStart) {
-          const now = Date.now();
+          const now = Date.now() + serverOffset;
           const elapsed = Math.floor((now - currentData.gameStart) / 1000);
           const remaining = Math.max(
             0,
@@ -326,7 +331,7 @@
         }
 
         if (currentData.shotStart && currentData.shotOn) {
-          const now = Date.now();
+          const now = Date.now() + serverOffset;
 
           const elapsed = Math.floor((now - currentData.shotStart) / 1000);
 
