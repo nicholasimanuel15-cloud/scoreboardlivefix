@@ -255,6 +255,13 @@
 
       let currentData = {};
 
+      function getQuarterLabel(q) {
+        if (q <= 4) return "Q" + q;
+        if (q === 5) return "OT1";
+        if (q === 6) return "OT2";
+        return "Q1";
+      }
+
       function formatTime(t) {
         let m = Math.floor(t / 60);
         let s = t % 60;
@@ -281,7 +288,7 @@
         foulA.innerText = currentData.foulA || 0;
         foulB.innerText = currentData.foulB || 0;
 
-        quarter.innerText = "Q" + (currentData.q || 1);
+        quarter.innerText = getQuarterLabel(currentData.q || 1);
 
         teamAName.innerText = currentData.teamAName || "TEAM A";
         teamBName.innerText = currentData.teamBName || "TEAM B";
