@@ -262,7 +262,7 @@
         const now = Date.now() + serverOffset;
 
         save({
-          gameStart: now + 150, // 🔥 buffer dikit biar gak kepotong
+          gameStart: now, // ❌ jangan pakai +150 lagi
           gameDuration: data.time || 0,
         });
       }
@@ -272,15 +272,9 @@
 
         const now = Date.now() + serverOffset;
 
-        // 🔥 hitung dengan presisi + kompensasi delay klik
-        let elapsed = (now - data.gameStart) / 1000;
-
-        // 🔥 kompensasi delay manusia + jaringan (~150ms)
-        elapsed += 0.15;
+        let elapsed = Math.floor((now - data.gameStart) / 1000);
 
         let remaining = Math.max(0, (data.gameDuration || 0) - elapsed);
-
-        remaining = Math.floor(remaining);
 
         save({
           time: remaining,
