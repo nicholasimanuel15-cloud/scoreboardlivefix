@@ -294,15 +294,24 @@
 
       /* QUARTER */
       function nextQuarter() {
+        let current = data.q || 1;
+
+        // urutan: 1,2,3,4,5,6 (5 = OT1, 6 = OT2)
+        let next = Math.min(6, current + 1);
+
         save({
-          q: Math.min(4, (data.q || 1) + 1),
+          q: next,
           gameStart: null,
-          time: data.defaultTime || 600, // 🔥 reset ke waktu awal
+          time: data.defaultTime || 600,
         });
       }
-
+      
       function resetQuarter() {
-        save({ q: 1, gameStart: null });
+        save({
+          q: 1,
+          gameStart: null,
+          time: data.defaultTime || 600,
+        });
       }
 
       /* SHOT CLOCK */
