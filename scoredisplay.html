@@ -143,8 +143,8 @@
         font-weight: 900;
 
         display: flex;
-        align-items: center;      /* 🔥 center vertikal */
-        justify-content: center;  /* 🔥 center horizontal */
+        align-items: center; /* 🔥 center vertikal */
+        justify-content: center; /* 🔥 center horizontal */
 
         padding: 10px 20px;
         min-width: 80px;
@@ -196,30 +196,6 @@
         align-items: center;
         justify-content: center;
       }
-
-      .sponsorBox {
-        background: #000;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-
-        padding: 4px 8px;
-
-        border-left: 2px solid rgba(255,255,255,0.1);
-        border-right: 2px solid rgba(255,255,255,0.1);
-
-        min-width: 110px;
-
-        height: 50%; /* 🔥 setengah dari center */
-        overflow: hidden;
-      }
-
-      .sponsorBox img {
-        height: 100%;
-        object-fit: contain;
-      }
     </style>
   </head>
 
@@ -245,8 +221,6 @@
         <div id="timer">10:00</div>
         <div class="quarter" id="quarter">Q1</div>
       </div>
-
-      <div class="sponsorBox" id="sponsorBox"></div>
 
       <!-- 🔢 SCORE B -->
       <div class="score" id="scoreB">0</div>
@@ -282,9 +256,12 @@
       let currentData = {};
 
       let serverOffset = 0;
-        firebase.database().ref(".info/serverTimeOffset").on("value", (snap) => {
-        serverOffset = snap.val() || 0;
-      });
+      firebase
+        .database()
+        .ref(".info/serverTimeOffset")
+        .on("value", (snap) => {
+          serverOffset = snap.val() || 0;
+        });
 
       function getQuarterLabel(q) {
         if (q <= 4) return "Q" + q;
@@ -341,20 +318,6 @@
 
         teamAName.style.color = currentData.textColorA || "#ffffff";
         teamBName.style.color = currentData.textColorB || "#ffffff";
-
-        const sponsorBox = document.getElementById("sponsorBox");
-
-        if (sponsorBox) {
-          sponsorBox.innerHTML = "";
-
-        if (currentData.sponsors && currentData.sponsors.length) {
-          currentData.sponsors.forEach((img) => {
-            let image = document.createElement("img");
-            image.src = img;
-            sponsorBox.appendChild(image);
-            });
-          }
-        }
       });
 
       setInterval(() => {
@@ -377,16 +340,14 @@
 
           const remaining = Math.max(
             0,
-            (currentData.shotDuration || 24) - elapsed
+            (currentData.shotDuration || 24) - elapsed,
           );
 
           // 🔥 INI YANG PENTING
           shotclock.innerText = Math.ceil(remaining);
 
           shotclock.style.display = "flex";
-        }
-        
-        else {
+        } else {
           shotclock.innerText = currentData.shot || 24;
           shotclock.style.display = currentData.shotOn ? "flex" : "none";
         }
