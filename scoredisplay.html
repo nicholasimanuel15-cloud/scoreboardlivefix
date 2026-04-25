@@ -288,7 +288,31 @@
 
         // 🔥 AUTO 2 BARIS
         let title = currentData.matchTitle || "GROUP PHASE";
-        matchTitle.innerHTML = title.replace(" ", "<br>");
+
+        // pisahkan kata
+        let words = title.split(" ");
+
+        // cari bagian KU
+        let result = [];
+        let buffer = [];
+
+        words.forEach((w) => {
+          if (w.toUpperCase() === "KU") {
+        buffer = [w];
+          } else if (buffer.length) {
+        buffer.push(w);
+          } else {
+        result.push(w);
+        }
+      });
+
+          // gabungkan KU + angka + dash jadi satu
+      if (buffer.length) {
+        result.push(buffer.join(" "));
+      }
+
+      // tampilkan per baris
+      matchTitle.innerHTML = result.join("<br>");;
 
         scoreA.innerText = currentData.scoreA || 0;
         scoreB.innerText = currentData.scoreB || 0;
