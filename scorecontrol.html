@@ -220,27 +220,6 @@
         reader.readAsDataURL(e.target.files[0]);
       }
 
-      function setSponsors(e) {
-        const files = e.target.files;
-        let promises = [];
-
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-
-        promises.push(
-          new Promise((resolve) => {
-            let reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.readAsDataURL(file);
-          })
-        );
-      }
-
-      Promise.all(promises).then((images) => {
-        save({ sponsors: images }); // 🔥 simpan array
-        });
-      }
-
       function setColor(t, color) {
         save({ ["color" + t]: color });
       }
@@ -320,7 +299,7 @@
           time: data.defaultTime || 600,
         });
       }
-      
+
       function resetQuarter() {
         save({
           q: 1,
@@ -419,13 +398,6 @@
           <div class="row">
             <input type="file" onchange="setLogo(event, 'A')" />
             <input type="file" onchange="setLogo(event, 'B')" />
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>SPONSOR</h3>
-          <div class="row">
-            <input type="file" multiple onchange="setSponsors(event)" />
           </div>
         </div>
 
